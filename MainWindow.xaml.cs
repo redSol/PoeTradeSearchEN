@@ -65,7 +65,7 @@ namespace PoeTradeSearch
                         case System.Windows.Forms.MouseButtons.Right:
                             if (
                                 MessageBox.Show(
-                                    "프로그램을 종료하시겠습니까?", "POE 거래소 검색",
+                                    "Do you want to close the program?", "POE Trade Search",
                                     MessageBoxButton.YesNo, MessageBoxImage.Question
                                 ) == MessageBoxResult.Yes
                             )
@@ -153,13 +153,13 @@ namespace PoeTradeSearch
             if (mConfigData.Options.CheckUpdates && CheckUpdates())
             {
                 MessageBoxResult result = MessageBox.Show(Application.Current.MainWindow,
-                        tmp + '\n' + '\n' + "이 프로그램의 최신 버전이 발견 되었습니다." + '\n' + "지금 새 버전을 받으러 가시겠습니까?",
+                        tmp + '\n' + '\n' + "The latest version of this program has been found." + '\n' + "Would you like to get that verison now?",
                         "POE 거래소 검색", MessageBoxButton.YesNo, MessageBoxImage.Question
                     );
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    Process.Start("https://github.com/phiDelPark/PoeTradeSearch/releases");
+                    Process.Start("https://github.com/redSol/PoeTradeSearchEN/releases");
                     mTerminate = true;
                     Close();
                 }
@@ -289,9 +289,8 @@ namespace PoeTradeSearch
                     if ((sResult ?? "") == "")
                     {
                         ForegroundMessage(
-                            "현재 거래소 접속이 원활하지 않을 수 있습니다." + '\n' +
-                            "한/영 서버의 거래소 접속을 확인 하신후 다시 시도하세요.",
-                            "검색 실패",
+                            "Server cannot be connected right now." + '\n' +
+                            "Search failed",
                             MessageBoxButton.OK, MessageBoxImage.Information
                         );
                         return;
@@ -427,21 +426,20 @@ namespace PoeTradeSearch
             }
             catch (Exception)
             {
-                ForegroundMessage("해당 아이템의 위키 연결에 실패했습니다.", "에러", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ForegroundMessage("Failed to link to item's wiki.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(Application.Current.MainWindow,
-                "버전: " + GetFileVersion() + " (D." + mConfigData.Options.DataVersion + ")" + '\n' + '\n' +
-                "프로젝트: https://github.com/phiDelPark/PoeTradeSearch" + '\n' + '\n' + '\n' +
-                "리그 선택은 설정 파일에서 설정 가능합니다." + '\n' + '\n' +
-                "소켓 정보는 홈[소][대] 연결[소][대] 로 보면됩니다." + '\n' + '\n' +
-                "시세정보) 총수. 최소값 ~ 최대값 = 많은[수] 1 ~ 2위" + '\n' + '\n' + '\n' +
-                "단축키 또는 창고휠 기능은 관리자 권한으로 실행해야 작동합니다." + '\n' +
-                "프로그램 설정은 데이터 폴더 Config.txt 파일을 열고 설정할 수 있습니다.",
-                "POE 거래소 검색"
+                "Version: " + GetFileVersion() + " (D." + mConfigData.Options.DataVersion + ")" + '\n' + '\n' +
+                "English Version: https://github.com/redSol/PoeTradeSearchEN" + '\n' + '\n' +
+                "Original project: https://github.com/phiDelPark/PoeTradeSearch" + '\n' + '\n' + '\n' +
+                "Mod selection can be configured in the config file." + '\n' + '\n' +
+                "Additional hotkeys such as ctrl + mousewheel can be activated by running the program as administrator." + '\n' +
+                "Program settings can be set in the config file located in the _POE_Data folder.",
+                "POE Trade Search"
                 );
 
             Native.SetForegroundWindow(Native.FindWindow(Restr.PoeClass, Restr.PoeCaption));

@@ -564,20 +564,6 @@ namespace PoeTradeSearch
                             if (itemType.Substring(0, 4) == Restr.Synthesised + " ")
                                 itemType = itemType.Substring(4);
                         }
-
-                        if (!is_unIdentify && itemRarity == Restr.Magic)
-                        {
-                            string[] tmp = itemType.Split(' ');
-                            if (tmp.Length > 1)
-                            {
-                               for (int i = 0; i < tmp.Length; i++)
-                                {
-                                    tmp[i] = "";
-                                    string tmp2 = string.Join(" ", tmp).Trim();
-                                    Console.WriteLine(tmp2);
-                                }
-                            }
-                        }
                         if (!is_unIdentify && itemRarity == Restr.Magic)
                         {
                             string[] tmp = itemType.Split(' ');
@@ -587,7 +573,6 @@ namespace PoeTradeSearch
                                 for (int i = 1; i < tmp.Length; i++)
                                 {
                                     tmpName = tmp[i - 1] + " " + tmp[i];
-                                    Console.WriteLine("tmpName: " + tmpName);
                                     BaseResultData tmpBaseType = mBaseDatas.Find(x => x.NameEn.Contains(tmpName));
                                     if (tmpBaseType != null)
                                     {
@@ -949,8 +934,6 @@ namespace PoeTradeSearch
                     itemfilter.disabled = ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked != true;
                     itemfilter.min = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_0")).Text, 99999);
                     itemfilter.max = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_1")).Text, 99999);
-                    Console.WriteLine(itemfilter.text + "," + itemfilter.id);
-                    Console.WriteLine(itemfilter.id);
 
                     if (mItemBaseName.Inherits.Contains("Armours")) {
                         switch (itemfilter.text)

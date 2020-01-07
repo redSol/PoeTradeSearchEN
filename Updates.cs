@@ -17,7 +17,7 @@ namespace PoeTradeSearch
             // 마우스 훜시 프로그램에 딜레이가 생겨 쓰레드 처리
             Thread thread = new Thread(() =>
             {
-                string u = "https://raw.githubusercontent.com/phiDelPark/PoeTradeSearch/master/VERSION";
+                string u = "https://raw.githubusercontent.com/redSol/PoeTradeSearchEN/master/VERSION";
                 string version = SendHTTP(null, u, 3);
                 if ((version ?? "") != "")
                 {
@@ -100,11 +100,8 @@ namespace PoeTradeSearch
         private bool BaseDataUpdates(string path)
         {
             bool success = false;
-            Console.WriteLine(path);
             if (File.Exists(path + "csv/BaseItemTypes.csv") && File.Exists(path + "csv/Words.csv"))
             {
-
-                Console.WriteLine("it exists");
                 try
                 {
                     List<string[]> oCsvEnList = new List<string[]>();
