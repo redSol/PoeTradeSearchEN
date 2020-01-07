@@ -289,7 +289,7 @@ namespace PoeTradeSearch
                     if ((sResult ?? "") == "")
                     {
                         ForegroundMessage(
-                            "Server cannot be connected right now." + '\n' +
+                            "Server cannot be connected right now.",
                             "Search failed",
                             MessageBoxButton.OK, MessageBoxImage.Information
                         );
