@@ -17,8 +17,7 @@ namespace PoeTradeSearch
         {
             InitializeComponent();
 
-            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            path = path.Remove(path.Length - 4) + "Data\\";
+            string path = System.IO.Path.GetFullPath("_POE_Data\\");
             JpgPath = path + jpgPath;
         }
 

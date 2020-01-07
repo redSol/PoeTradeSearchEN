@@ -104,6 +104,8 @@ namespace PoeTradeSearch
         internal const string EvasionEnergyShield = "#% increased Evasion and Energy Shield";
         internal const string ArmourEvasionEnergyShield = "#% increased Armour, Evasion and Energy Shield";
 
+        internal const string OccupiedBy = "Map is occupied by";
+
         internal static Dictionary<string, string> lFilterTypeName = new Dictionary<string, string>()
         {
             { "pseudo", Pseudo}, { "explicit", Explicit}, { "fractured", Fractured}, { "crafted", Crafted}, { "implicit", Implicit},

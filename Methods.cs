@@ -232,7 +232,7 @@ namespace PoeTradeSearch
                         { Restr.Quality, "" }, { Restr.Lv, "" }, { Restr.ItemLv, "" }, { Restr.CharmLv, "" }, { Restr.MaTier, "" }, { Restr.Socket, "" },
                         { Restr.PhysicalDamage, "" }, { Restr.ElementalDamage, "" }, { Restr.ChaosDamage, "" }, { Restr.AttacksPerSecond, "" },
                         { Restr.Shaper, "" }, { Restr.Elder, "" }, { Restr.Crusader, "" }, { Restr.Redeemer, "" }, { Restr.Hunter, "" }, { Restr.Warlord, "" },
-                        { Restr.Synthesis, "" }, { Restr.Corrupt, "" }, { Restr.Unidentify, "" }, { Restr.Vaal, "" }
+                        { Restr.Synthesis, "" }, { Restr.Corrupt, "" }, { Restr.Unidentify, "" }, { Restr.Vaal, "" }, { Restr.OccupiedBy, ""}
                     };
 
                     for (int i = 1; i < asData.Length; i++)
@@ -245,19 +245,6 @@ namespace PoeTradeSearch
 
 
                             string[] asTmp = asOpt[j].Split(':');
-
-                            /*if (asOpt[j].Contains(Restr.Shaper))
-                                lItemOption[Restr.Shaper] = "_TRUE_";
-                            if (asOpt[j].Contains(Restr.Elder))
-                                lItemOption[Restr.Elder] = "_TRUE_";
-                            if (asOpt[j].Contains(Restr.Crusader))
-                                lItemOption[Restr.Crusader] = "_TRUE_";
-                            if (asOpt[j].Contains(Restr.Redeemer))
-                                lItemOption[Restr.Redeemer] = "_TRUE_";
-                            if (asOpt[j].Contains(Restr.Hunter))
-                                lItemOption[Restr.Hunter] = "_TRUE_";
-                            if (asOpt[j].Contains(Restr.Warlord))
-                                lItemOption[Restr.Warlord] = "_TRUE_";*/
 
                             if (lItemOption.ContainsKey(asTmp[0]))
                             {
@@ -502,6 +489,7 @@ namespace PoeTradeSearch
                     bool is_gem = itemRarity == Restr.Gem;
                     bool is_currency = itemRarity == Restr.Currency;
                     bool is_divinationCard = itemRarity == Restr.DivinationCard;
+                    bool is_elder_map = lItemOption[Restr.OccupiedBy] == "_TRUE_";
 
                     if (is_map || is_currency) is_map_fragment = false;
                     bool is_detail = is_gem || is_currency || is_divinationCard || is_prophecy || is_map_fragment;

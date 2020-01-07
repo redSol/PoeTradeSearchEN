@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PoeTradeSearch"
         mc:Ignorable="d" ResizeMode="NoResize" Topmost="True" SizeToContent="WidthAndHeight" Left="30" Top="30" FontFamily="Malgun Gothic" FontSize="12"
-        Title="POE Exchange Search" Loaded="Window_Loaded" Closing="Window_Closing" Closed="Window_Closed" Deactivated="Window_Deactivated" PreviewKeyDown="Window_PreviewKeyDown" Activated="Window_Activated" Width="458">
+        Title="POE Exchange Search" Loaded="Window_Loaded" Closing="Window_Closing" Closed="Window_Closed" Deactivated="Window_Deactivated" PreviewKeyDown="Window_PreviewKeyDown" Activated="Window_Activated" Width="458" Height="585">
 
-    <Grid Margin="25, 20, 25, 25" Height="503">
+    <Grid Margin="25, 20, 25, 25" Height="532">
         <ComboBox Name="cbRarity" xmlns:sys="clr-namespace:System;assembly=mscorlib" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="57" SelectedIndex="0" SelectionChanged="tkPrice_ReSet">
             <ComboBox.Resources>
                 <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
@@ -40,12 +40,12 @@
 
         <TextBlock Name="tbHelpText" Text="Click on text to refresh" Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" HorizontalAlignment="Left" Margin="5,430,0,0" VerticalAlignment="Top" IsEnabled="False" />
 
-        <Button Name="btnSearch" Content="Search" HorizontalAlignment="Left" Margin="0,460,0,-5" VerticalAlignment="Top" Width="245" Height="38" Click="Button_Click" />
+        <Button Name="btnSearch" Content="Search" HorizontalAlignment="Left" Margin="0,471,0,-6" VerticalAlignment="Top" Width="245" Height="38" Click="Button_Click" />
         <Button Content="KR" HorizontalAlignment="Left" Margin="245,460,0,0" VerticalAlignment="Top" Height="19" Width="19" Tag="0" Click="Button_Click_2" Visibility="Hidden" />
         <Button Content="EN" HorizontalAlignment="Left" Margin="245,479,0,-2" VerticalAlignment="Top" Height="19" Width="19" Tag="1" Click="Button_Click_2" Visibility="Hidden" />
-        <Button Name="btnClose" Content="Close" HorizontalAlignment="Left" Margin="290,460,0,-5" VerticalAlignment="Top" Width="95" Height="38" Click="Button_Click_1" IsDefault="True" FontWeight="Bold" />
+        <Button Name="btnClose" Content="Close" HorizontalAlignment="Left" Margin="307,470,0,0" VerticalAlignment="Top" Width="95" Height="38" Click="Button_Click_1" IsDefault="True" FontWeight="Bold" />
 
-        <TabControl Name="tabControl1" BorderThickness="0 1" Height="372" Margin="0,75,0,0" VerticalAlignment="Top" TabStripPlacement="Bottom" SelectionChanged="tabControl1_SelectionChanged" HorizontalAlignment="Left" Width="404">
+        <TabControl Name="tabControl1" BorderThickness="0 1" Height="380" Margin="0,75,-2,0" VerticalAlignment="Top" TabStripPlacement="Bottom" SelectionChanged="tabControl1_SelectionChanged" HorizontalAlignment="Left" Width="404">
             <TabControl.Resources>
                 <Style TargetType="TabPanel">
                     <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -176,7 +176,7 @@
                     <TextBox Name="tbQualityMax" HorizontalAlignment="Left" Height="18" Margin="101,294,0,0" Text="" VerticalAlignment="Top" Width="25" PreviewMouseLeftButtonDown="TbOpt0_0_PreviewMouseLeftButtonDown" />
 
                     <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" HorizontalAlignment="Left" Height="30" Margin="132,283,0,0" VerticalAlignment="Top" Width="1" RenderTransformOrigin="0.5,0.5" />
-                    <Label Name="lbSocketBackground" Content="" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" HorizontalAlignment="Left" Margin="138,278,0,0" VerticalAlignment="Top" Width="111" Visibility="Visible" Height="37" />
+                    <Label Name="lbSocketBackground" Content="" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" HorizontalAlignment="Left" Margin="138,275,0,0" VerticalAlignment="Top" Width="111" Visibility="Visible" Height="40" />
 
                     <Label Content="&amp;" HorizontalAlignment="Left" Margin="175,293,0,0" VerticalAlignment="Top" Width="22" />
                     <CheckBox Name="ckSocket" Content="Sockets" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" HorizontalAlignment="Left" Margin="138,275,0,0" VerticalAlignment="Top" Width="71" Checked="tkPrice_ReSet" Unchecked="tkPrice_ReSet" />
