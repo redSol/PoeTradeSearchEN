@@ -52,7 +52,7 @@ namespace PoeTradeSearch
         internal const string Hunter = "Hunter Item";
         internal const string Warlord = "Warlord Item";
 
-        internal const string Synthesis = "Synthesis";
+        internal const string Synthesis = "Synthesised Item";
         internal const string Synthesised = "Synthesised";
         internal const string Captured = "Captured";
 
@@ -96,15 +96,13 @@ namespace PoeTradeSearch
         internal const string ArmourRating = "#% increased Armour";
 
         internal const string FlatEnergyShield = "# to maximum Energy Shield";
-        internal const string FlatEvasionRating = "# to Evasion";
+        internal const string FlatEvasionRating = "# to Evasion Rating";
         internal const string FlatArmourRating = "# to Armour";
 
         internal const string ArmourEvasionRating = "#% increased Armour and Evasion";
         internal const string ArmourEnergyShield = "#% increased Armour and Energy Shield";
         internal const string EvasionEnergyShield = "#% increased Evasion and Energy Shield";
         internal const string ArmourEvasionEnergyShield = "#% increased Armour, Evasion and Energy Shield";
-
-        internal const string OccupiedBy = "Map is occupied by";
 
         internal static Dictionary<string, string> lFilterTypeName = new Dictionary<string, string>()
         {

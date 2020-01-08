@@ -36,7 +36,6 @@ namespace PoeTradeSearch
 
                 if (mConfigData.Options.SearchPriceCount > 80)
                     mConfigData.Options.SearchPriceCount = 80;
-
                 //-----------------------------
                 if (mCreateDatabase)
                 {
@@ -162,6 +161,18 @@ namespace PoeTradeSearch
             Synthesis.Content = "Synthesis";
             lbSocketBackground.Visibility = Visibility.Hidden;
 
+            ckSocket.Visibility = Visibility.Visible;
+            tbSocketMin.Visibility = Visibility.Visible;
+            tbSocketMax.Visibility = Visibility.Visible;
+            tbLinksMin.Visibility = Visibility.Visible;
+            tbLinksMax.Visibility = Visibility.Visible;
+            lbAmp.Visibility = Visibility.Visible;
+
+            cbElderGuardian.SelectedIndex = 0;
+            cbMapInfluence.SelectedIndex = 0;
+            cbElderGuardian.Visibility = Visibility.Hidden;
+            cbMapInfluence.Visibility = Visibility.Hidden;
+
             cbRarity.Items.Clear();
             cbRarity.Items.Add(Restr.All);
             cbRarity.Items.Add(Restr.Normal);
@@ -220,7 +231,7 @@ namespace PoeTradeSearch
                     itemType = asOpt.Length > 2 && asOpt[2] != "" ? Regex.Replace(asOpt[2] ?? "", @"<<set:[A-Z]+>>", "") : itemName;
                     if (asOpt.Length == 2) itemName = "";
 
-                    bool is_flask = false, is_prophecy = false, is_map_fragment = false, is_met_entrails = false, is_captured_beast = false;
+                    bool is_flask = false, is_prophecy = false, is_map_fragment = false, is_met_entrails = false, is_captured_beast = false, is_elder_map = false;
 
                     int k = 0, baki = 0, notImpCnt = 0;
                     double attackSpeedIncr = 0;
@@ -232,9 +243,10 @@ namespace PoeTradeSearch
                         { Restr.Quality, "" }, { Restr.Lv, "" }, { Restr.ItemLv, "" }, { Restr.CharmLv, "" }, { Restr.MaTier, "" }, { Restr.Socket, "" },
                         { Restr.PhysicalDamage, "" }, { Restr.ElementalDamage, "" }, { Restr.ChaosDamage, "" }, { Restr.AttacksPerSecond, "" },
                         { Restr.Shaper, "" }, { Restr.Elder, "" }, { Restr.Crusader, "" }, { Restr.Redeemer, "" }, { Restr.Hunter, "" }, { Restr.Warlord, "" },
-                        { Restr.Synthesis, "" }, { Restr.Corrupt, "" }, { Restr.Unidentify, "" }, { Restr.Vaal, "" }, { Restr.OccupiedBy, ""}
+                        { Restr.Synthesis, "" }, { Restr.Corrupt, "" }, { Restr.Unidentify, "" }, { Restr.Vaal, "" }
                     };
 
+                  
                     for (int i = 1; i < asData.Length; i++)
                     {
                         asOpt = asData[i].Trim().Split(new string[] { "\r\n" }, StringSplitOptions.None);
@@ -245,6 +257,43 @@ namespace PoeTradeSearch
 
 
                             string[] asTmp = asOpt[j].Split(':');
+
+                            if (asOpt[j].Contains("Map is occupied by The Enslaver"))
+                            {
+                                asOpt[j] = "Map is occupied by 1 (implicit)";
+                                is_elder_map = true;
+                                cbElderGuardian.SelectedIndex = 1;
+                            }
+                            if (asOpt[j].Contains("Map is occupied by The Eradicator"))
+                            {
+                                asOpt[j] = "Map is occupied by 2 (implicit)";
+                                is_elder_map = true;
+                                cbElderGuardian.SelectedIndex = 2;
+                            }
+                            if (asOpt[j].Contains("Map is occupied by The Constrictor"))
+                            {
+                                asOpt[j] = "Map is occupied by 3 (implicit)";
+                                is_elder_map = true;
+                                cbElderGuardian.SelectedIndex = 3;
+                            }
+                            if (asOpt[j].Contains("Map is occupied by The Purifier"))
+                            {
+                                asOpt[j] = "Map is occupied by 4 (implicit)";
+                                is_elder_map = true;
+                                cbElderGuardian.SelectedIndex = 4;
+                            }
+                            if (asOpt[j].Contains("Area is influenced by The Elder"))
+                            {
+                                is_elder_map = true;
+                                asOpt[j] = "Area is influenced by 2 (implicit)";
+                                cbMapInfluence.SelectedIndex = 2;
+                            }
+                            if (asOpt[j].Contains("Area is influenced by The Shaper"))
+                            {
+                                is_elder_map = true;
+                                asOpt[j] = "Area is influenced by 1 (implicit)";
+                                cbMapInfluence.SelectedIndex = 1;
+                            }
 
                             if (lItemOption.ContainsKey(asTmp[0]))
                             {
@@ -291,6 +340,7 @@ namespace PoeTradeSearch
                                             foreach (FilterResultEntrie entrie in entries)
                                             {
                                                 // 장비 옵션 (특정) 이 겹칠경우 (특정) 대신 일반 옵션 값 사용 (후에 json 만들때 다시 검사함)
+
                                                 if (entries.Length > 1 && entrie.Part != null)
                                                     continue;
 
@@ -434,6 +484,14 @@ namespace PoeTradeSearch
                                             }
                                         }
 
+                                        if (is_elder_map)
+                                        {
+                                            if (filter.ID == "implicit.stat_1792283443" || filter.ID == "implicit.stat_3624393862")
+                                            {
+                                                min = 99999;
+                                                max = 99999;
+                                            }
+                                        }
                                         ((TextBox)this.FindName("tbOpt" + k + "_0")).Text = min == 99999 ? "" : min.ToString();
                                         ((TextBox)this.FindName("tbOpt" + k + "_1")).Text = max == 99999 ? "" : max.ToString();
 
@@ -489,10 +547,24 @@ namespace PoeTradeSearch
                     bool is_gem = itemRarity == Restr.Gem;
                     bool is_currency = itemRarity == Restr.Currency;
                     bool is_divinationCard = itemRarity == Restr.DivinationCard;
-                    bool is_elder_map = lItemOption[Restr.OccupiedBy] == "_TRUE_";
 
                     if (is_map || is_currency) is_map_fragment = false;
                     bool is_detail = is_gem || is_currency || is_divinationCard || is_prophecy || is_map_fragment;
+
+                    if (is_elder_map)
+                    {
+                        ckSocket.Visibility = Visibility.Hidden;
+                        tbSocketMin.Visibility = Visibility.Hidden;
+                        tbSocketMax.Visibility = Visibility.Hidden;
+                        tbLinksMin.Visibility = Visibility.Hidden;
+                        tbLinksMax.Visibility = Visibility.Hidden;
+                        lbAmp.Visibility = Visibility.Hidden;
+
+                        cbElderGuardian.Visibility = Visibility.Visible;
+                        cbMapInfluence.Visibility = Visibility.Visible;
+
+                       
+                    }
 
                     if (is_met_entrails)
                     {
@@ -637,7 +709,7 @@ namespace PoeTradeSearch
                             else
                             {
                                 if ((tmpBaseType?.Detail ?? "") != "")
-                                    tkDetail.Text = "세부사항:" + '\n' + '\n' + tmpBaseType.Detail.Replace("\\n", "" + '\n');
+                                    tkDetail.Text = "Detail:" + '\n' + '\n' + tmpBaseType.Detail.Replace("\\n", "" + '\n');
                                 else
                                 {
                                     int i = inherit == "Delve" ? 3 : (is_divinationCard || inherit == "Currency" ? 2 : 1);
@@ -646,7 +718,7 @@ namespace PoeTradeSearch
 
                                     if (asData.Length > (i + 1))
                                     {
-                                        int v = asData[i - 1].TrimStart().IndexOf("적용: ");
+                                        int v = asData[i - 1].TrimStart().IndexOf("Apply: ");
                                         tkDetail.Text += v > -1 ? "" + '\n' + '\n' + (asData[i - 1].TrimStart().Split('\n')[v == 0 ? 0 : 1].TrimEnd()) : "";
                                     }
                                 }
@@ -681,6 +753,11 @@ namespace PoeTradeSearch
                                 if (((ComboBox)this.FindName("cbOpt" + i)).SelectedIndex == -1)
                                 {
                                     ((ComboBox)this.FindName("cbOpt" + i)).SelectedValue = Restr.Implicit;
+                                }
+                                if (ifilter.text.Contains("Area is influenced by") || ifilter.text.Contains("Map is occupied by"))
+                                {
+                                    itemfilters[i].disabled = false;
+                                    ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked = true;
                                 }
                             }
                             else if (inherit != "" && (string)((ComboBox)this.FindName("cbOpt" + i)).SelectedValue != Restr.Crafted)
@@ -792,6 +869,10 @@ namespace PoeTradeSearch
 
                     cbName.IsChecked = (itemRarity != Restr.Rare && itemRarity != Restr.Magic) || !(by_type && mConfigData.Options.SearchByType);
 
+                    if (is_elder_map)
+                    {
+                        cbName.IsChecked = false;
+                    }
                     cbRarity.SelectedValue = itemRarity;
                     if (cbRarity.SelectedIndex == -1)
                     {
@@ -803,7 +884,7 @@ namespace PoeTradeSearch
                     {
                         cbRarity.SelectedIndex = 0;
                     }
-
+                    
                     bool IsExchangeCurrency = inherit == "Currency" && Restr.lExchangeCurrency.ContainsKey(itemType);
                     bdExchange.Visibility = !is_gem && (is_detail || IsExchangeCurrency) ? Visibility.Visible : Visibility.Hidden;
                     bdExchange.IsEnabled = IsExchangeCurrency;
@@ -840,8 +921,8 @@ namespace PoeTradeSearch
                             tbLvMin.Text = lItemOption[Restr.MaTier];
                             tbLvMax.Text = lItemOption[Restr.MaTier];
                             ckLv.Content = "Tier";
-                            ckLv.IsChecked = true;
-                            Synthesis.Content = "역병";
+                            ckLv.IsChecked = is_elder_map ? false : true;
+                            Synthesis.Content = "Synthesis";
                         }
                         else if (is_gem)
                         {
@@ -909,6 +990,9 @@ namespace PoeTradeSearch
             itemOption.PriceMin = tbPriceFilterMin.Text == "" ? 0 : StrToDouble(tbPriceFilterMin.Text, 99999);
             itemOption.Rarity = (string)cbRarity.SelectedValue;
 
+            itemOption.ElderGuardian = cbElderGuardian.SelectedIndex;
+            itemOption.MapInfluence = cbMapInfluence.SelectedIndex;
+
             int total_res_idx = -1;
 
             for (int i = 0; i < 10; i++)
@@ -923,25 +1007,7 @@ namespace PoeTradeSearch
                     itemfilter.min = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_0")).Text, 99999);
                     itemfilter.max = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_1")).Text, 99999);
 
-                    if (mItemBaseName.Inherits.Contains("Armours")) {
-                        switch (itemfilter.text)
-                        {
-                            case Restr.EnergyShield:
-                            case Restr.EvasionRating:
-                            case Restr.ArmourRating:
-                            case Restr.FlatEnergyShield:
-                            case Restr.FlatEvasionRating:
-                            case Restr.FlatArmourRating:
-                            case Restr.ArmourEvasionRating:
-                            case Restr.ArmourEnergyShield:
-                            case Restr.EvasionEnergyShield:
-                            case Restr.ArmourEvasionEnergyShield:
-                                itemfilter.text = itemfilter.text + " (Local)";
-                                break;
-                        }
-                    }
-
-                    if (mItemBaseName.Inherits.Contains("Weapons"))
+                    /*if (mItemBaseName.Inherits.Contains("Weapons"))
                     {
                         switch (itemfilter.text)
                         {
@@ -955,7 +1021,7 @@ namespace PoeTradeSearch
                                 itemfilter.text = itemfilter.text + " (Local)";
                                 break;
                         }
-                    }
+                    }*/
 
                     if (itemfilter.text == Restr.TotalResistance)
                     {
@@ -1002,7 +1068,7 @@ namespace PoeTradeSearch
                     JsonData jsonData = new JsonData();
                     jsonData.Query = new q_Query();
                     q_Query JQ = jsonData.Query;
-
+                    
                     JQ.Name = Restr.ServerLang == 1 ? mItemBaseName.NameEN : mItemBaseName.NameKR;
                     JQ.Type = Restr.ServerLang == 1 ? mItemBaseName.TypeEN : mItemBaseName.TypeKR;
 
@@ -1113,13 +1179,53 @@ namespace PoeTradeSearch
 
                                 JQ.Stats[0].Filters[idx] = new q_Stats_filters();
                                 JQ.Stats[0].Filters[idx].Value = new q_Min_And_Max();
-
+                                JQ.Stats[0].Filters[idx].Value.option = null;
+                                
                                 if (filter != null && filter.ID != null && filter.ID.Trim() != "")
                                 {
                                     JQ.Stats[0].Filters[idx].Disabled = itemOptions.itemfilters[i].disabled == true;
-                                    JQ.Stats[0].Filters[idx].Value.Min = itemOptions.itemfilters[i].min;
-                                    JQ.Stats[0].Filters[idx].Value.Max = itemOptions.itemfilters[i].max;
-                                    JQ.Stats[0].Filters[idx++].Id = filter.ID;
+                                    
+                                    if (filter.ID == "implicit.stat_1792283443")
+                                    {
+                                        JQ.Stats[0].Filters[idx].Value.option = Convert.ToString(itemOptions.MapInfluence);
+                                    } else if (filter.ID == "implicit.stat_3624393862")
+                                    {
+                                        JQ.Stats[0].Filters[idx].Value.option = Convert.ToString(itemOptions.ElderGuardian);
+                                    }
+                                    else
+                                    {
+                                        JQ.Stats[0].Filters[idx].Value.Min = itemOptions.itemfilters[i].min;
+                                        JQ.Stats[0].Filters[idx].Value.Max = itemOptions.itemfilters[i].max;
+                                    }
+
+                                    if (!Inherit.Contains("Armours") && filter.ID == "explicit.stat_124859000") // #% increased Evasion Rating
+                                    {
+                                        JQ.Stats[0].Filters[idx++].Id = "explicit.stat_2106365538";
+                                    }
+                                    else if (Inherit.Contains("Armours") && filter.ID == "explicit.stat_2144192055") // # to Evasion Rating
+                                    {
+                                        JQ.Stats[0].Filters[idx++].Id = "explicit.stat_53045048";
+                                    }
+                                    else if (Inherit.Contains("Armours") && filter.ID == "explicit.stat_809229260") // # to Armour
+                                    {
+                                        JQ.Stats[0].Filters[idx++].Id = "explicit.stat_3484657501";
+                                    }
+                                    else if (!Inherit.Contains("Armours") && filter.ID == "explicit.stat_1062208444") // %# increased Armour
+                                    {
+                                        JQ.Stats[0].Filters[idx++].Id = "explicit.stat_2866361420";
+                                    }
+                                    else if (Inherit.Contains("Weapons") && filter.ID == "explicit.stat_803737631") // # to Accuracy Rating
+                                    {
+                                        JQ.Stats[0].Filters[idx++].Id = "explicit.stat_691932474";
+                                    }
+                                    else if (Inherit.Contains("Weapons") && filter.ID == "explicit.stat_795138349") // #% chance to poison on hit
+                                    {
+                                        JQ.Stats[0].Filters[idx++].Id = "explicit.stat_3885634897";
+                                    }
+                                    else
+                                    {
+                                        JQ.Stats[0].Filters[idx++].Id = filter.ID;
+                                    }
                                 }
                                 else
                                 {
@@ -1197,6 +1303,8 @@ namespace PoeTradeSearch
                             sEntity = sEntity.Replace("\"type\":\"" + JQ.Type + "\",", "\"name\":\"" + JQ.Type + "\",");
                     }
 
+                    
+
                     sEntity = sEntity.Replace("{\"max\":99999,\"min\":99999}", "{}");
                     sEntity = sEntity.Replace("{\"max\":99999,", "{");
                     sEntity = sEntity.Replace(",\"min\":99999}", "}");
@@ -1207,6 +1315,11 @@ namespace PoeTradeSearch
 
                     sEntity = Regex.Replace(sEntity, "\"(sale_type|rarity|category|corrupted|synthesised_item|shaper_item|elder_item|crusader_item|redeemer_item|hunter_item|warlord_item|map_shaped|map_elder|map_blighted)\":{\"option\":\"any\"},?", "");
                     sEntity = sEntity.Replace("},}", "}}");
+                    sEntity = sEntity.Replace(",\"option\":null", "");
+                    sEntity = sEntity.Replace("99999", "null");
+
+                    //sEntity = sEntity.Replace("\"implicit.stat_1792283443\",\"value\":{\"max\":0,\"min\":0}", "\"implicit.stat_1792283443\",\"value\":{\"option\":\"2\"}");
+                    //sEntity = sEntity.Replace("\"implicit.stat_3624393862\",\"value\":{\"max\":0,\"min\":0}", "\"implicit.stat_3624393862\",\"value\":{\"option\":\"4\"}");
 
                     if (error_filter)
                     {
@@ -1228,7 +1341,6 @@ namespace PoeTradeSearch
                             }
                         );
                     }
-
                     return sEntity;
                 }
                 catch (Exception ex)
@@ -1242,11 +1354,12 @@ namespace PoeTradeSearch
             {
                 return "";
             }
+            
         }
 
         private void PriceUpdate(string[] entity, int listCount)
         {
-            string result = "There is no information";
+            string result = "There is no information, click search for more results";
             string result2 = "";
             string urlString = "";
             string sEentity;
@@ -1258,14 +1371,16 @@ namespace PoeTradeSearch
                         entity[0],
                         entity[1]
                     );
+                
                 urlString = Restr.ExchangeApi[Restr.ServerLang];
             }
             else
             {
                 sEentity = entity[0];
+                
                 urlString = Restr.TradeApi[Restr.ServerLang];
             }
-
+            
             if (sEentity != null && sEentity != "")
             {
                 try
@@ -1406,7 +1521,7 @@ namespace PoeTradeSearch
 
                                 result2 = Regex.Replace(result2.TrimEnd(',', ' '), @"(timeless-)?([a-z]{3})[a-z\-]+\-([a-z]+)", @"$3`$2");
                                 if (result2 == "")
-                                    result2 = "가장 많은 수 없음";
+                                    result2 = "Low result count, price will vary";
                             }
                         }
 
@@ -1476,7 +1591,6 @@ namespace PoeTradeSearch
             liPrice.Items.Clear();
 
             int listCount = (cbPriceListCount.SelectedIndex + 1) * 4;
-
             priceThread?.Interrupt();
             priceThread?.Abort();
             priceThread = new Thread(() => PriceUpdate(
@@ -1499,7 +1613,7 @@ namespace PoeTradeSearch
                 {
                     try
                     {
-                        Clipboard.SetText(text, textDataFormat);
+                        Clipboard.SetDataObject(text);
                         return;
                     }
                     catch { }

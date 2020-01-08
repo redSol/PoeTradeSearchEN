@@ -38,6 +38,8 @@ namespace PoeTradeSearch
             public double LvMax;
             public string Rarity;
             public double PriceMin;
+            public int ElderGuardian;
+            public int MapInfluence;
             public List<Itemfilter> itemfilters = new List<Itemfilter>();
         }
 
@@ -309,6 +311,9 @@ namespace PoeTradeSearch
 
             [DataMember(Name = "max")]
             internal double Max;
+
+            [DataMember(Name = "option")]
+            internal string option;
         }
 
         [DataContract]
@@ -383,6 +388,7 @@ namespace PoeTradeSearch
 
             [DataMember(Name = "synthesised_item")]
             internal q_Option Synthesis = new q_Option();
+
         }
 
         [DataContract]

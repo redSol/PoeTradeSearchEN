@@ -59,10 +59,11 @@ namespace PoeTradeSearch
                     {
                         for (int i = 0; i < rootClass.Result.Length; i++)
                         {
+                            
                             int index = Array.FindIndex(rootClass.Result[i].Entries, x => x.ID.Substring(x.ID.IndexOf(".") + 1) == itm.Key);
                             if (index > -1 && rootClass.Result[i].Entries[index].Text.IndexOf("(" + Restr.Local + ")") > 0)
                             {
-                                //rootClass.Result[i].Entries[index].Text = rootClass.Result[i].Entries[index].Text.Replace("(" + Restr.Local + ")", "");
+                                rootClass.Result[i].Entries[index].Text = rootClass.Result[i].Entries[index].Text.Replace(" (" + Restr.Local + ")", "");
                                 rootClass.Result[i].Entries[index].Part = itm.Value == 1 ? "Weapons" : "Armours";
                             }
                         }
