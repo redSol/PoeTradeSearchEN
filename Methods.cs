@@ -1641,7 +1641,7 @@ namespace PoeTradeSearch
                 {
                     try
                     {
-                        Clipboard.SetDataObject(text);
+                        Clipboard.SetText(text, textDataFormat);
                         return;
                     }
                     catch { }
