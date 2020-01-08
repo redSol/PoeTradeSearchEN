@@ -570,7 +570,7 @@ namespace PoeTradeSearch
                     {
                         itemID = itemInherits = "Entrailles/Entrails";
                         string[] tmp = itemType.Split(' ');
-                        itemType = "" + tmp[tmp.Length - 1];
+                        itemType = "Metamorph " + tmp[tmp.Length - 1];
                     }
                     else if (is_prophecy)
                     {
@@ -606,23 +606,23 @@ namespace PoeTradeSearch
                         }
 
                         if ((is_unIdentify || itemRarity == Restr.Normal) && itemType.Length > 4 && itemType.IndexOf(Restr.Higher + " ") == 0)
-                            itemType = itemType.Substring(3);
+                            itemType = itemType.Substring(9);
 
                         if (is_map && itemType.Length > 5)
                         {
                             if (itemType.IndexOf(Restr.Blighted + " ") == 0)
                             {
                                 is_blight = true;
-                                itemType = itemType.Substring(6);
+                                itemType = itemType.Substring(9);
                             }
 
-                            if (itemType.Substring(0, 4) == Restr.formed + " ")
-                                itemType = itemType.Substring(4);
+                            if (itemType.Substring(0, 4) == Restr.Shaped + " ")
+                                itemType = itemType.Substring(7);
                         }
                         else if (lItemOption[Restr.Synthesis] == "_TRUE_")
                         {
                             if (itemType.Substring(0, 4) == Restr.Synthesised + " ")
-                                itemType = itemType.Substring(4);
+                                itemType = itemType.Substring(12);
                         }
                         if (!is_unIdentify && itemRarity == Restr.Magic)
                         {
