@@ -12,7 +12,7 @@
 			"auto_select_pseudo":true,
 			"auto_select_corrupt":"no or yes",
 			"ctrl_wheel":true,
-			"check_updates":false,
+			"check_updates":true,
 			"data_version":"3.9.1b"
 		},
 	"shortcuts":[
