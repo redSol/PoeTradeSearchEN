@@ -944,7 +944,7 @@ namespace PoeTradeSearch
                             tbLvMax.Text = lItemOption[Restr.MaTier];
                             ckLv.Content = "Tier";
                             ckLv.IsChecked = is_elder_map ? false : true;
-                            Synthesis.Content = "Synthesis";
+                            Synthesis.Content = "Blighted";
                         }
                         else if (is_gem)
                         {
