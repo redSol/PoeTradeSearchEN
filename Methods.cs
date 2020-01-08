@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -206,7 +207,7 @@ namespace PoeTradeSearch
                 ((ComboBox)this.FindName("cbOpt" + i)).SelectedValuePath = "Name";
             }
         }
-
+        private StringDictionary metamorphMods = new StringDictionary();
         private void ItemTextParser(string itemText, bool isWinShow = true)
         {
             string itemName = "";
@@ -214,7 +215,7 @@ namespace PoeTradeSearch
             string itemRarity = "";
             string itemInherits = "";
             string itemID = "";
-
+            metamorphMods.Clear();
             try
             {
                 string[] asData = (itemText ?? "").Trim().Split(new string[] { "--------" }, StringSplitOptions.None);
@@ -264,36 +265,38 @@ namespace PoeTradeSearch
                                 is_elder_map = true;
                                 cbElderGuardian.SelectedIndex = 1;
                             }
-                            if (asOpt[j].Contains("Map is occupied by The Eradicator"))
+                            else if (asOpt[j].Contains("Map is occupied by The Eradicator"))
                             {
                                 asOpt[j] = "Map is occupied by 2 (implicit)";
                                 is_elder_map = true;
                                 cbElderGuardian.SelectedIndex = 2;
                             }
-                            if (asOpt[j].Contains("Map is occupied by The Constrictor"))
+                            else if (asOpt[j].Contains("Map is occupied by The Constrictor"))
                             {
                                 asOpt[j] = "Map is occupied by 3 (implicit)";
                                 is_elder_map = true;
                                 cbElderGuardian.SelectedIndex = 3;
                             }
-                            if (asOpt[j].Contains("Map is occupied by The Purifier"))
+                            else if (asOpt[j].Contains("Map is occupied by The Purifier"))
                             {
                                 asOpt[j] = "Map is occupied by 4 (implicit)";
                                 is_elder_map = true;
                                 cbElderGuardian.SelectedIndex = 4;
                             }
-                            if (asOpt[j].Contains("Area is influenced by The Elder"))
+                            else if (asOpt[j].Contains("Area is influenced by The Elder"))
                             {
                                 is_elder_map = true;
                                 asOpt[j] = "Area is influenced by 2 (implicit)";
                                 cbMapInfluence.SelectedIndex = 2;
                             }
-                            if (asOpt[j].Contains("Area is influenced by The Shaper"))
+                            else if (asOpt[j].Contains("Area is influenced by The Shaper"))
                             {
                                 is_elder_map = true;
                                 asOpt[j] = "Area is influenced by 1 (implicit)";
                                 cbMapInfluence.SelectedIndex = 1;
                             }
+
+                            
 
                             if (lItemOption.ContainsKey(asTmp[0]))
                             {
@@ -330,7 +333,7 @@ namespace PoeTradeSearch
 
                                     FilterResultEntrie filter = null;
                                     Regex rgx = new Regex("^" + input + "$", RegexOptions.IgnoreCase);
-
+                                    
                                     foreach (FilterResult filterResult in mFilterData.Result)
                                     {
                                         FilterResultEntrie[] entries = Array.FindAll(filterResult.Entries, x => rgx.IsMatch(x.Text));
@@ -344,10 +347,26 @@ namespace PoeTradeSearch
                                                 if (entries.Length > 1 && entrie.Part != null)
                                                     continue;
 
+                                                if (entrie.Type == "monster")
+                                                {
+                                                    if (!metamorphMods.ContainsKey(entrie.Text.Trim()))
+                                                    {
+                                                        metamorphMods.Add(entrie.Text.Trim(), "1");
+                                                    }
+                                                    else
+                                                    {
+                                                        string val = metamorphMods[entrie.Text.Trim()];
+                                                        int num = (int.Parse(val) + 1);
+                                                        metamorphMods[entrie.Text.Trim()] = (num).ToString();
+                                                        continue;
+                                                    }
+                                                }
+                                                
                                                 int idxMin = 0, idxMax = 0;
                                                 bool isMin = false, isMax = false;
                                                 bool isBreak = true;
 
+                                                
                                                 MatchCollection matches2 = Regex.Matches(entrie.Text, @"[-]?[0-9]+\.[0-9]+|[-]?[0-9]+|#");
 
                                                 for (int t = 0; t < matches2.Count; t++)
@@ -380,10 +399,12 @@ namespace PoeTradeSearch
                                                     {
                                                         string[] id_split = entrie.ID.Split('.');
                                                         resistance = id_split.Length == 2 && Restr.lResistance.ContainsKey(id_split[1]);
+
                                                         filter = entrie;
 
                                                         MatchCollection matches = Regex.Matches(asOpt[j], @"[-]?[0-9]+\.[0-9]+|[-]?[0-9]+");
                                                         min = isMin && matches.Count > idxMin ? StrToDouble(((Match)matches[idxMin]).Value, 99999) : 99999;
+                                                        
                                                         max = isMax && idxMin < idxMax && matches.Count > idxMax ? StrToDouble(((Match)matches[idxMax]).Value, 99999) : 99999;
                                                     }
 
@@ -492,6 +513,7 @@ namespace PoeTradeSearch
                                                 max = 99999;
                                             }
                                         }
+
                                         ((TextBox)this.FindName("tbOpt" + k + "_0")).Text = min == 99999 ? "" : min.ToString();
                                         ((TextBox)this.FindName("tbOpt" + k + "_1")).Text = max == 99999 ? "" : max.ToString();
 
@@ -1002,10 +1024,16 @@ namespace PoeTradeSearch
 
                 if (comboBox.SelectedIndex > -1)
                 {
+                    if ((comboBox.Text.ToLower() == "monster"))
+                    {
+                        ((TextBox)this.FindName("tbOpt" + i + "_0")).Text = metamorphMods[((TextBox)this.FindName("tbOpt" + i)).Text.Trim()];
+                    }
                     itemfilter.text = ((TextBox)this.FindName("tbOpt" + i)).Text.Trim();
                     itemfilter.disabled = ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked != true;
                     itemfilter.min = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_0")).Text, 99999);
                     itemfilter.max = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_1")).Text, 99999);
+
+                    
 
                     /*if (mItemBaseName.Inherits.Contains("Weapons"))
                     {

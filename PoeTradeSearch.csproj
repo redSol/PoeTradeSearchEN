@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{58398A01-9050-45B4-A168-21DF9DDD6972}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>PoeTradeSearch</RootNamespace>
     <AssemblyName>PoeTradeSearch</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
