@@ -28,7 +28,9 @@
 			{"keycode":0,"ctrl":true,"value":"{Run}","Detail":"작동키 (Ctrl+C) 변경은 프로젝트 홈 위키 참고"}
 		],
 	"checked":[
-			{"id":"Jewels/Amulets/Rings/Belts/Quivers/Armours/","text":"#% to Fire Resistance"},
+			{"id":"Jewels/Amulets/Rings/Belts/Quivers/Armours/","text":"#% to Fire Resistance", "mod_type":"pseudo/explicit/implicit/crafted"},
+			{"id":"Jewels/Amulets/Rings/Belts/Quivers/Armours/","text":"#% to Lightning Resistance", "mod_type":"pseudo/explicit/"},
+			{"id":"Belts/","text":"# to Strength", "mod_type":"all"},
 		],
 	"dangerous_mods":[
 			{"id":"Maps/","text":"Monsters reflect #% of Elemental Damage"},

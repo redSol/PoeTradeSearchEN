@@ -141,6 +141,9 @@ namespace PoeTradeSearch
 
             [DataMember(Name = "text")]
             internal string Text = null;
+
+            [DataMember(Name = "mod_type")]
+            internal string ModType = null;
         }
 
         [DataContract(Name = "dangerous_mods")]

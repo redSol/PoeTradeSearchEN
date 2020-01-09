@@ -121,7 +121,7 @@ namespace PoeTradeSearch
         private void SetSearchButtonText()
         {
             bool isExchange = bdExchange.Visibility == Visibility.Visible && (cbOrbs.SelectedIndex > 0 || cbSplinters.SelectedIndex > 0);
-            btnSearch.Content = "Exchange " + (isExchange ? "대량 " : "") + "Search (" + (Restr.ServerLang == 0 ? "KR" : "EN") + ")";
+            btnSearch.Content = "Open in browser (pathofexile.com)";
         }
 
         private void ResetControls()
@@ -187,13 +187,13 @@ namespace PoeTradeSearch
 
             for (int i = 0; i < 10; i++)
             {
+                ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked = false;
+                ((CheckBox)this.FindName("tbOpt" + i + "_3")).IsChecked = false;
                 ((TextBox)this.FindName("tbOpt" + i)).Text = "";
                 ((TextBox)this.FindName("tbOpt" + i)).Background = SystemColors.WindowBrush;
                 ((TextBox)this.FindName("tbOpt" + i + "_0")).Text = "";
                 ((TextBox)this.FindName("tbOpt" + i + "_1")).Text = "";
                 ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsEnabled = true;
-                ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked = false;
-                ((CheckBox)this.FindName("tbOpt" + i + "_3")).IsChecked = false;
                 ((CheckBox)this.FindName("tbOpt" + i + "_3")).Visibility = Visibility.Hidden;
                 ((TextBox)this.FindName("tbOpt" + i)).BorderBrush = SystemColors.ActiveBorderBrush;
                 ((TextBox)this.FindName("tbOpt" + i + "_0")).BorderBrush = SystemColors.ActiveBorderBrush;
@@ -788,12 +788,35 @@ namespace PoeTradeSearch
                                     ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked = true;
                                 }
                             }
-                            else if (inherit != "" && (string)((ComboBox)this.FindName("cbOpt" + i)).SelectedValue != Restr.Crafted)
+                            if (inherit != "")
                             {
-                                if (
-                                    (mConfigData.Options.AutoCheckUnique && itemRarity == Restr.Unique)
-                                    || (Array.Find(mConfigData.Checked, x => x.Text == ifilter.text && x.ID.IndexOf(inherit + "/") > -1) != null)
-                                )
+                                string modType = (string)((ComboBox)this.FindName("cbOpt" + i)).SelectedValue;
+                                foreach (ConfigChecked checkedMods in mConfigData.Checked)
+                                {
+                                    if (checkedMods.ModType != null)
+                                    {
+                                        string[] configModType = checkedMods.ModType.Split('/');
+                                        foreach (string cmt in configModType)
+                                        {
+                                            if (checkedMods.ModType.ToLower() != "all")
+                                            {
+                                                if (cmt == modType.ToLower() && checkedMods.Text == ifilter.text)
+                                                {
+                                                    ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked = true;
+                                                    itemfilters[i].disabled = false;
+                                                }
+                                            } else
+                                            {
+                                                if (checkedMods.Text == ifilter.text)
+                                                {
+                                                    ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked = true;
+                                                    itemfilters[i].disabled = false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if ((mConfigData.Options.AutoCheckUnique && itemRarity == Restr.Unique))
                                 {
                                     ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked = true;
                                     itemfilters[i].disabled = false;
@@ -802,7 +825,6 @@ namespace PoeTradeSearch
                                 {
                                     ((TextBox)this.FindName("tbOpt" + i)).Background = System.Windows.Media.Brushes.Red;
                                 }
-
                             }
                         }
 
@@ -1512,7 +1534,6 @@ namespace PoeTradeSearch
                                                 key = amount < 1 ? Math.Round(1 / amount, 1) + " " + ents1 : Math.Round(amount, 1) + " " + ents0;
                                             else
                                                 key = Math.Round(amount - 0.1) + " " + key;
-
                                             if (currencys.ContainsKey(key))
                                                 currencys[key]++;
                                             else
