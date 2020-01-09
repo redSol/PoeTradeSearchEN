@@ -66,6 +66,9 @@ namespace PoeTradeSearch
 
             [DataMember(Name = "checked")]
             internal ConfigChecked[] Checked = null;
+
+            [DataMember(Name = "dangerous_mods")]
+            internal ConfigDangerousMods[] DangerousMods = null;
         }
 
         [DataContract(Name = "options")]
@@ -132,6 +135,16 @@ namespace PoeTradeSearch
 
         [DataContract(Name = "checked")]
         internal class ConfigChecked
+        {
+            [DataMember(Name = "id")]
+            internal string ID = null;
+
+            [DataMember(Name = "text")]
+            internal string Text = null;
+        }
+
+        [DataContract(Name = "dangerous_mods")]
+        internal class ConfigDangerousMods
         {
             [DataMember(Name = "id")]
             internal string ID = null;

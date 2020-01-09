@@ -296,6 +296,8 @@ namespace PoeTradeSearch
                                 cbMapInfluence.SelectedIndex = 1;
                             }
 
+
+
                             
 
                             if (lItemOption.ContainsKey(asTmp[0]))
@@ -584,8 +586,6 @@ namespace PoeTradeSearch
 
                         cbElderGuardian.Visibility = Visibility.Visible;
                         cbMapInfluence.Visibility = Visibility.Visible;
-
-                       
                     }
 
                     if (is_met_entrails)
@@ -719,6 +719,7 @@ namespace PoeTradeSearch
 
                         try
                         {
+                            
                             BaseResultData tmpBaseType = is_prophecy ? mProphecyDatas.Find(x => x.NameEn == itemType) : mBaseDatas.Find(x => x.NameEn == itemType);
 
                             mItemBaseName.TypeEN = tmpBaseType == null ? itemType : tmpBaseType.NameEn;
@@ -746,8 +747,13 @@ namespace PoeTradeSearch
                                 }
                             }
 
+                            if (is_gem)
+                                tkDetail.Text = "Quality: " + Restr.lGemQualityProperties[itemType] + "\r\n" + tkDetail.Text;
+
                             tkDetail.Text = tkDetail.Text.Replace(Restr.SClickSplitItem, "");
                             tkDetail.Text = Regex.Replace(tkDetail.Text, "<(uniqueitem|prophecy|divination|gemitem|magicitem|rareitem|whiteitem|corrupted|default|normal|augmented|size:[0-9]+)>", "");
+
+                            
                         }
                         catch { }
                     }
@@ -792,6 +798,11 @@ namespace PoeTradeSearch
                                     ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked = true;
                                     itemfilters[i].disabled = false;
                                 }
+                                if ((Array.Find(mConfigData.DangerousMods, x => x.Text == ifilter.text && x.ID.IndexOf(inherit + "/") > -1) != null))
+                                {
+                                    ((TextBox)this.FindName("tbOpt" + i)).Background = System.Windows.Media.Brushes.Red;
+                                }
+
                             }
                         }
 
@@ -1771,7 +1782,7 @@ namespace PoeTradeSearch
                                     if (mConfigData.Options.CtrlWheel)
                                         MouseHook.Stop();
 
-                                    MessageBox.Show(Application.Current.MainWindow, "프로그램 동작을 일시 중지합니다." + '\n' +
+                                    MessageBox.Show(Application.Current.MainWindow, "Hotkeys have been paused." + '\n' +
                                         "다시 시작하려면 일시 중지 단축키를 한번더 누르세요.", "POE 거래소 검색");
                                 }
                                 else
@@ -1779,7 +1790,7 @@ namespace PoeTradeSearch
                                     if (mConfigData.Options.CtrlWheel)
                                         MouseHook.Start();
 
-                                    MessageBox.Show(Application.Current.MainWindow, "프로그램 동작을 다시 시작합니다.", "POE 거래소 검색");
+                                    MessageBox.Show(Application.Current.MainWindow, "Hotkeys have been re-enabled.", "POE 거래소 검색");
                                 }
 
                                 Native.SetForegroundWindow(findHwnd);

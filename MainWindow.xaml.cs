@@ -430,6 +430,8 @@ namespace PoeTradeSearch
             }
         }
 
+
+
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(Application.Current.MainWindow,
@@ -472,6 +474,176 @@ namespace PoeTradeSearch
 
             TrayIcon.Visible = false;
             TrayIcon.Dispose();
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string tab = "";
+                string itemRarity = cbRarity.Text;
+                string itemName = (mItemBaseName.NameEN != "" ? mItemBaseName.NameEN : mItemBaseName.TypeEN).Replace(" ", "-").Replace("'", "").ToLower();
+                string itemBaseType = mItemBaseName.TypeEN.Replace(" ", "-").Replace("'", "").ToLower();
+                string itemInherit = mItemBaseName.Inherits[0].ToLower();
+                bool useBase = false, useName = false;
+                Console.WriteLine("mItemBaseName.NameEN:" + mItemBaseName.NameEN);
+                Console.WriteLine("mItemBaseName.TypeEN:" + mItemBaseName.TypeEN);
+                Console.WriteLine("inherits: " + mItemBaseName.Inherits[0].ToLower());
+                switch (itemInherit)
+                {
+                    case "currency":
+                        {
+                            if (itemName.Contains("oil"))
+                                tab = "oils";
+                            else if (itemName.Contains("fossil"))
+                                tab = "fossils";
+                            else if (itemName.Contains("essence"))
+                                tab = "essences";
+                            else
+                                tab = "currency";
+                            useBase = true;
+
+                            break;
+                        }
+                    case "mapfragments":
+                        {
+                            if (itemName.Contains("scarab"))
+                                tab = "scarabs";
+                            else
+                                tab = "fragments";
+                            useBase = true;
+                            break;
+                        }
+                    case "atlasupgrades":
+                        {
+                            tab = "watchstones";
+                            useBase = true;
+                            useName = true;
+                            break;
+                        }
+                    case "legion":
+                        {
+                            tab = "incubators";
+                            useBase = true;
+                            break;
+                        }
+                    case "delve":
+                        {
+                            tab = "resonators";
+                            useBase = true;
+                            break;
+                        }
+                    case "divinationcards":
+                        {
+                            tab = "divinationcards";
+                            useBase = true;
+                            break;
+                        }
+                    case "prophecies":
+                        {
+                            tab = "prophecies";
+                            useBase = true;
+                            break;
+                        }
+                    case "gems":
+                        {
+                            tab = "skill-gems";
+                            useBase = true;
+                            break;
+                        }
+                    case "maps":
+                        {
+                            if (itemRarity == "Unique")
+                            {
+                                tab = "unique-maps/" + itemName + "-t" + tbLvMin.Text.Trim();
+                            } else
+                            {
+                                tab = "maps/" + itemBaseType + "-t" + tbLvMin.Text.Trim() + "-metamorph";
+                            }
+                            break;
+                        }
+                    case "jewels":
+                        {
+                            tab = "unique-jewels";
+                            useBase = true;
+                            useName = true;
+                            break;
+                        }
+                    case "flasks":
+                        {
+                            tab = "unique-flasks";
+                            useName = true;
+                            break;
+                        }
+                    case "weapons":
+                        {
+                            tab = "unique-weapons";
+                            useBase = true;
+                            useName = true;
+                            break;
+                        }
+                    case "armours":
+                        {
+                            tab = "unique-armours";
+                            useBase = true;
+                            useName = true;
+                            break;
+                        }
+                    case "amulets":
+                    case "rings":
+                    case "belts":
+                        {
+                            tab = "unique-accessories";
+                            useBase = true;
+                            useName = true;
+                            break;
+                        }
+                }
+
+                if (itemInherit != "maps" && itemInherit != "atlasupgrades")
+                {
+                    if (useName && useBase)
+                        tab = tab + "/" + itemName + "-" + itemBaseType;
+
+                    else if (useName && !useBase)
+                        tab = tab + "/" + itemName;
+
+                    else if (!useName && useBase)
+                        tab = tab + "/" + itemBaseType;
+
+                    if (itemInherit == "gems")
+                    {
+                        if (int.Parse(tbLvMin.Text) == 1)
+                            tab = tab + "-1";
+                        else if (int.Parse(tbLvMin.Text) == 2)
+                            tab = tab + "-2";
+                        else if (int.Parse(tbLvMin.Text) == 3)
+                            tab = tab + "-3";
+                        else if (int.Parse(tbLvMin.Text) == 4)
+                            tab = tab + "-4";
+                        else if (int.Parse(tbLvMin.Text) == 20)
+                            tab = tab + "-20";
+                        else if (int.Parse(tbLvMin.Text) == 21)
+                            tab = tab + "-21";
+
+                        if (int.Parse(tbQualityMin.Text) == 20)
+                            tab = tab + "-20";
+                        else if (int.Parse(tbQualityMin.Text) == 21)
+                            tab = tab + "-23c";
+                    }
+
+                    if (itemName.Contains("a-master-seeks-help"))
+                    {
+                        tab = "prophecies?name=a master seeks help";
+                    }
+                }
+                Process.Start(
+                    ("https://poe.ninja/challenge/" + tab));
+            }
+            catch (Exception)
+            {
+                ForegroundMessage("Failed to link to item's poe.ninja page", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
     }
 }

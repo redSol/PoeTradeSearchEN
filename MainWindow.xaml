@@ -238,7 +238,7 @@
                             <ComboBox x:Name="cbSplinters" HorizontalAlignment="Left" Margin="200,15,0,0" VerticalAlignment="Top" MaxDropDownHeight="282" Width="175" SelectionChanged="CbOrbs_SelectionChanged"/>
                         </Grid>
                     </Border>
-                    <ComboBox x:Name="cbElderGuardian" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="139,297,0,0" VerticalAlignment="Top" Width="90" SelectedIndex="0" SelectionChanged="tkPrice_ReSet" Visibility="Visible">
+                    <ComboBox x:Name="cbElderGuardian" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="139,297,0,0" VerticalAlignment="Top" Width="90" SelectedIndex="0" SelectionChanged="tkPrice_ReSet" Visibility="Hidden">
                         <ComboBox.Resources>
                             <System:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</System:Double>
                         </ComboBox.Resources>
@@ -248,7 +248,7 @@
                         <ComboBoxItem Content="Constrictor"/>
                         <ComboBoxItem Content="Purifier"/>
                     </ComboBox>
-                    <ComboBox x:Name="cbMapInfluence" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="139,273,0,0" VerticalAlignment="Top" Width="90" SelectedIndex="0" SelectionChanged="tkPrice_ReSet" Visibility="Visible">
+                    <ComboBox x:Name="cbMapInfluence" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="139,273,0,0" VerticalAlignment="Top" Width="90" SelectedIndex="0" SelectionChanged="tkPrice_ReSet" Visibility="Hidden">
                         <ComboBox.Resources>
                             <System:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</System:Double>
                         </ComboBox.Resources>
@@ -285,5 +285,12 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        <Button Content="poe.ninja"  HorizontalAlignment="Left" Height="20" Margin="245,1,0,0" VerticalAlignment="Top" Width="56" Click="Button_Click_5" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="9"/>
+                </Style>
+            </Button.Resources>
+        </Button>
     </Grid>
 </Window>
