@@ -410,12 +410,15 @@ namespace PoeTradeSearch
 
         private void tbOpt0_Checked(object sender, RoutedEventArgs e)
         {
-            try
+            if (mConfigData.Options.UpdatePriceOnChecked)
             {
-                PriceUpdateThreadWorker(GetItemOptions(), null);
-            }
-            catch (Exception)
-            {
+                try
+                {
+                    PriceUpdateThreadWorker(GetItemOptions(), null);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 

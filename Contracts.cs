@@ -107,6 +107,9 @@ namespace PoeTradeSearch
             [DataMember(Name = "set_max_value")]
             internal bool SetMaxValue = false;
 
+            [DataMember(Name = "update_price_on_checked")]
+            internal bool UpdatePriceOnChecked = false;
+
             [DataMember(Name = "search_before_day")]
             internal int SearchBeforeDay = 0;
 
