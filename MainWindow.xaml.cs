@@ -400,6 +400,18 @@ namespace PoeTradeSearch
         {
             try
             {
+                tkPriceInfo1.Foreground = tkPriceInfo2.Foreground = System.Windows.Media.Brushes.DeepPink;
+                tkPriceCount1.Foreground = tkPriceCount2.Foreground = System.Windows.Media.Brushes.DeepPink;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void tbOpt0_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
                 PriceUpdateThreadWorker(GetItemOptions(), null);
             }
             catch (Exception)

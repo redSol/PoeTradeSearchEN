@@ -1448,7 +1448,7 @@ namespace PoeTradeSearch
 
         private void PriceUpdate(string[] entity, int listCount)
         {
-            string result = "There is no information, click search for more results";
+            string result = "Waiting for results...";
             string result2 = "";
             string urlString = "";
             string sEentity;
