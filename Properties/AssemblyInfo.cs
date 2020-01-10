@@ -7,7 +7,7 @@ using System.Windows;
 // 어셈블리에 대한 일반 정보는 다음 특성 집합을 통해 
 // 제어됩니다. 어셈블리와 관련된 정보를 수정하려면
 // 이러한 특성 값을 변경하세요.
-[assembly: AssemblyTitle("POE 거래소 검색")]
+[assembly: AssemblyTitle("POE TradeSearch")]
 [assembly: AssemblyDescription("POE 아이템을 거래소에서 검색할 수 있게 도와주는 프로그램")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
@@ -52,4 +52,4 @@ using System.Windows;
 // 기본값으로 할 수 있습니다.
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("3.9.2.1")]
+[assembly: AssemblyFileVersion("3.9.2.2")]

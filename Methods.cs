@@ -516,6 +516,33 @@ namespace PoeTradeSearch
                                             }
                                         }
 
+                                        
+                                        if (filter.Text.Contains(Restr.FlatPhysicalDamage) ||
+                                                filter.Text.Contains(Restr.FlatColdDamage) ||
+                                                filter.Text.Contains(Restr.FlatLightningDamage) ||
+                                                filter.Text.Contains(Restr.FlatFireDamage) ||
+                                                filter.Text.Contains(Restr.FlatChaosDamage))
+                                        {
+                                            min = (min + max) / 2;
+                                            max = 99999;
+                                        }
+
+                                        if (filter.Type != Restr.Enchant && filter.Type != Restr.Implicit)
+                                        {
+                                            if (itemRarity == Restr.Unique)
+                                            {
+                                                min = Math.Ceiling(min * (mConfigData.Options.UniqueMinValuePercent / 100));
+                                                if (mConfigData.Options.SetMaxValue)
+                                                    max = Math.Ceiling(min * (mConfigData.Options.UniqueMaxValuePercent / 100));
+                                            }
+                                            else
+                                            {
+                                                min = Math.Ceiling(min * (mConfigData.Options.MinValuePercent / 100));
+                                                if (mConfigData.Options.SetMaxValue)
+                                                    max = Math.Ceiling(min * (mConfigData.Options.MaxValuePercent / 100));
+                                            }
+                                        }
+
                                         ((TextBox)this.FindName("tbOpt" + k + "_0")).Text = min == 99999 ? "" : min.ToString();
                                         ((TextBox)this.FindName("tbOpt" + k + "_1")).Text = max == 99999 ? "" : max.ToString();
 
@@ -1054,18 +1081,19 @@ namespace PoeTradeSearch
             {
                 Itemfilter itemfilter = new Itemfilter();
                 ComboBox comboBox = (ComboBox)this.FindName("cbOpt" + i);
-
+                
                 if (comboBox.SelectedIndex > -1)
                 {
+                    double minValue = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_0")).Text, 99999);
+                    double maxValue = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_1")).Text, 99999);
                     if ((comboBox.Text.ToLower() == "monster"))
                     {
                         ((TextBox)this.FindName("tbOpt" + i + "_0")).Text = metamorphMods[((TextBox)this.FindName("tbOpt" + i)).Text.Trim()];
                     }
                     itemfilter.text = ((TextBox)this.FindName("tbOpt" + i)).Text.Trim();
                     itemfilter.disabled = ((CheckBox)this.FindName("tbOpt" + i + "_2")).IsChecked != true;
-                    itemfilter.min = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_0")).Text, 99999);
-                    itemfilter.max = StrToDouble(((TextBox)this.FindName("tbOpt" + i + "_1")).Text, 99999);
-
+                    itemfilter.min = minValue;
+                    itemfilter.max = maxValue;
                     
 
                     /*if (mItemBaseName.Inherits.Contains("Weapons"))

@@ -92,6 +92,21 @@ namespace PoeTradeSearch
             [DataMember(Name = "search_price_count")]
             internal decimal SearchPriceCount = 20;
 
+            [DataMember(Name = "min_value_percent")]
+            internal double MinValuePercent = 100;
+
+            [DataMember(Name = "max_value_percent")]
+            internal double MaxValuePercent = 100;
+
+            [DataMember(Name = "unique_min_value_percent")]
+            internal double UniqueMinValuePercent = 100;
+
+            [DataMember(Name = "unique_max_value_percent")]
+            internal double UniqueMaxValuePercent = 100;
+
+            [DataMember(Name = "set_max_value")]
+            internal bool SetMaxValue = false;
+
             [DataMember(Name = "search_before_day")]
             internal int SearchBeforeDay = 0;
 
