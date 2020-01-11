@@ -1917,11 +1917,11 @@ namespace PoeTradeSearch
                                 }
                                 else if (valueLower.IndexOf("{enter}") == 0)
                                 {
-                                    Regex regex = new Regex(@"{enter}", RegexOptions.IgnoreCase);
-                                    string tmp = regex.Replace(shortcut.Value, "" + '\n');
-                                    string[] strs = tmp.Trim().Split('\n');
-
-                                    for (int i = 0; i < strs.Length; i++)
+                                    //Regex regex = new Regex(@"{enter}", RegexOptions.IgnoreCase);
+                                    //string tmp = regex.Replace(shortcut.Value, "" + '\n');
+                                    //string[] strs = tmp.Trim().Split('\n');
+                                    System.Windows.Forms.SendKeys.SendWait(valueLower);
+                                    /*for (int i = 0; i < strs.Length; i++)
                                     {
                                         SetClipText(strs[i], TextDataFormat.UnicodeText);
                                         Thread.Sleep(300);
@@ -1929,7 +1929,7 @@ namespace PoeTradeSearch
                                         System.Windows.Forms.SendKeys.SendWait("^{a}");
                                         System.Windows.Forms.SendKeys.SendWait("^{v}");
                                         System.Windows.Forms.SendKeys.SendWait("{enter}");
-                                    }
+                                    }*/
                                 }
                                 else if (valueLower.IndexOf("{link}") == 0)
                                 {
