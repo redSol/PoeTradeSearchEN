@@ -237,19 +237,19 @@ namespace PoeTradeSearch
             string sEntity;
             string url = "";
             string[] exchange = null;
-
+            string accountState = (string)cbAccountState.SelectedValue;
             if (bdExchange.Visibility == Visibility.Visible && (cbOrbs.SelectedIndex > 0 || cbSplinters.SelectedIndex > 0))
             {
                 exchange = new string[2];
                 exchange[0] = Restr.lExchangeCurrency[mItemBaseName.TypeEN];
                 exchange[1] = Restr.lExchangeCurrency[(string)(cbOrbs.SelectedIndex > 0 ? cbOrbs.SelectedValue : cbSplinters.SelectedValue)];
                 url = Restr.ExchangeApi[Restr.ServerLang] + Restr.ServerType + "/?redirect&source=";
-                url += Uri.EscapeDataString("{\"exchange\":{\"status\":{\"option\":\"online\"},\"have\":[\"" + exchange[0] + "\"],\"want\":[\"" + exchange[1] + "\"]}}");
+                url += Uri.EscapeDataString("{\"exchange\":{\"status\":{\"option\":\"" + accountState + "\"},\"have\":[\"" + exchange[0] + "\"],\"want\":[\"" + exchange[1] + "\"]}}");
                 Process.Start(url);
             }
             else
             {
-                sEntity = CreateJson(GetItemOptions(), false);
+                sEntity = CreateJson(GetItemOptions(), false, accountState);
 
                 if (sEntity == null || sEntity == "")
                 {
@@ -382,7 +382,7 @@ namespace PoeTradeSearch
                 exchange[1] = Restr.lExchangeCurrency[(string)(cbOrbs.SelectedIndex > 0 ? cbOrbs.SelectedValue : cbSplinters.SelectedValue)];
             }
 
-            PriceUpdateThreadWorker(exchange != null ? null : GetItemOptions(), exchange);
+            PriceUpdateThreadWorker(exchange != null ? null : GetItemOptions(), exchange, (string)cbAccountState.SelectedValue);
         }
 
         private void tkPriceInfo_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -414,7 +414,7 @@ namespace PoeTradeSearch
             {
                 try
                 {
-                    PriceUpdateThreadWorker(GetItemOptions(), null);
+                    PriceUpdateThreadWorker(GetItemOptions(), null, (string)cbAccountState.SelectedValue);
                 }
                 catch (Exception)
                 {

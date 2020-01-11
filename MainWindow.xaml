@@ -14,6 +14,11 @@
                 <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
             </ComboBox.Resources>
         </ComboBox>
+        <ComboBox xmlns:sys="clr-namespace:System;assembly=mscorlib" x:Name="cbAccountState" HorizontalAlignment="Left" Margin="73,0,0,0" VerticalAlignment="Top" Width="57" SelectedIndex="0" SelectionChanged="tkPrice_ReSet">
+            <ComboBox.Resources>
+                <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">0</sys:Double>
+            </ComboBox.Resources>
+        </ComboBox>
         <CheckBox x:Name="cbName" Content="Item Name" HorizontalAlignment="Left" Margin="4,26,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14" Width="377" Checked="cbName_Checked" Unchecked="cbName_Checked" />
 
         <Label x:Name="lbDPS" Content="Mods" HorizontalAlignment="Left" Margin="0,54,0,0" VerticalAlignment="Top" />
@@ -264,7 +269,8 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-                        <ListBox x:Name="liPrice" Grid.IsSharedSizeScope="True" Height="{Binding ActualHeight, ElementName=grPriceLayout}" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="0,0,0,1" />
+                        <ListBox x:Name="liPrice" Grid.IsSharedSizeScope="True" Height="{Binding ActualHeight, ElementName=grPriceLayout}" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="0,0,0,1" >
+                        </ListBox>
                     </Grid>
 
                     <Label Content="Min Value:" HorizontalAlignment="Left" Margin="155,288,0,0" VerticalAlignment="Top" />

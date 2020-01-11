@@ -272,6 +272,16 @@ namespace PoeTradeSearch
         {
             [DataMember(Name = "name")]
             internal string Name = "";
+
+            [DataMember(Name = "online")]
+            internal OnlineStatus Online;
+        }
+
+        [DataContract]
+        internal class OnlineStatus
+        {
+            [DataMember(Name = "league")]
+            internal string League = "";
         }
 
         [DataContract]

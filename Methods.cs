@@ -181,6 +181,11 @@ namespace PoeTradeSearch
             cbRarity.Items.Add(Restr.Rare);
             cbRarity.Items.Add(Restr.Unique);
 
+            cbAccountState.Items.Clear();
+            cbAccountState.Items.Add("online");
+            cbAccountState.Items.Add("any");
+            cbAccountState.SelectedIndex = 0;
+
             tabControl1.SelectedIndex = 0;
             cbPriceListCount.SelectedIndex = (int)Math.Ceiling(mConfigData.Options.SearchPriceCount / 20) - 1;
             tbPriceFilterMin.Text = mConfigData.Options.SearchPriceMin > 0 ? mConfigData.Options.SearchPriceMin.ToString() : "";
@@ -531,15 +536,21 @@ namespace PoeTradeSearch
                                         {
                                             if (itemRarity == Restr.Unique)
                                             {
-                                                min = Math.Ceiling(min * (mConfigData.Options.UniqueMinValuePercent / 100));
-                                                if (mConfigData.Options.SetMaxValue)
-                                                    max = Math.Ceiling(min * (mConfigData.Options.UniqueMaxValuePercent / 100));
+                                                if (min != 99999)
+                                                {
+                                                    min = Math.Ceiling(min * (mConfigData.Options.UniqueMinValuePercent / 100));
+                                                    if (mConfigData.Options.SetMaxValue)
+                                                        max = Math.Ceiling(min * (mConfigData.Options.UniqueMaxValuePercent / 100));
+                                                }
                                             }
                                             else
                                             {
-                                                min = Math.Ceiling(min * (mConfigData.Options.MinValuePercent / 100));
-                                                if (mConfigData.Options.SetMaxValue)
-                                                    max = Math.Ceiling(min * (mConfigData.Options.MaxValuePercent / 100));
+                                                if (min != 99999)
+                                                {
+                                                    min = Math.Ceiling(min * (mConfigData.Options.MinValuePercent / 100));
+                                                    if (mConfigData.Options.SetMaxValue)
+                                                        max = Math.Ceiling(min * (mConfigData.Options.MaxValuePercent / 100));
+                                                }
                                             }
                                         }
 
@@ -1022,7 +1033,7 @@ namespace PoeTradeSearch
 
                     if (isWinShow || this.Visibility == Visibility.Visible)
                     {
-                        PriceUpdateThreadWorker(GetItemOptions(), null);
+                        PriceUpdateThreadWorker(GetItemOptions(), null, (string)cbAccountState.SelectedValue);
 
                         tkPriceInfo1.Foreground = tkPriceInfo2.Foreground = System.Windows.SystemColors.WindowTextBrush;
                         tkPriceCount1.Foreground = tkPriceCount2.Foreground = System.Windows.SystemColors.WindowTextBrush;
@@ -1137,7 +1148,7 @@ namespace PoeTradeSearch
             return itemOption;
         }
 
-        private string CreateJson(ItemOption itemOptions, bool useSaleType)
+        private string CreateJson(ItemOption itemOptions, bool useSaleType, string accountState)
         {
             string BeforeDayToString(int day)
             {
@@ -1164,8 +1175,10 @@ namespace PoeTradeSearch
                     string Inherit = mItemBaseName.Inherits.Length > 0 ? mItemBaseName.Inherits[0] : "";
 
                     JQ.Stats = new q_Stats[0];
-                    JQ.Status.Option = "online";
 
+
+
+                    JQ.Status.Option = accountState;
                     jsonData.Sort.Price = "asc";
 
                     JQ.Filters.Type.Filters.Rarity.Option = "any";
@@ -1446,19 +1459,19 @@ namespace PoeTradeSearch
             
         }
 
-        private void PriceUpdate(string[] entity, int listCount)
+        private void PriceUpdate(string[] entity, int listCount, string accountState)
         {
             string result = "Waiting for results...";
             string result2 = "";
             string urlString = "";
             string sEentity;
-
             if (entity.Length > 1)
             {
                 sEentity = String.Format(
-                        "{{\"exchange\":{{\"status\":{{\"option\":\"online\"}},\"have\":[\"{0}\"],\"want\":[\"{1}\"]}}}}",
+                        "{{\"exchange\":{{\"status\":{{\"option\":\"{3}\"}},\"have\":[\"{0}\"],\"want\":[\"{1}\"]}}}}",
                         entity[0],
-                        entity[1]
+                        entity[1],
+                        accountState
                     );
                 
                 urlString = Restr.ExchangeApi[Restr.ServerLang];
@@ -1540,10 +1553,18 @@ namespace PoeTradeSearch
                                         if (fetchData.Result[i].Listing.Price != null && fetchData.Result[i].Listing.Price.Amount > 0)
                                         {
                                             string account = fetchData.Result[i].Listing.Account.Name;
+
+                                            string onlineStatus = "Online";
+                                            if (accountState == "any") {
+                                                if (fetchData.Result[i].Listing.Account.Online == null)
+                                                    onlineStatus = "Offline"; 
+                                            }
+                                            
+
                                             string key = fetchData.Result[i].Listing.Price.Currency;
                                             double amount = fetchData.Result[i].Listing.Price.Amount;
                                             string keyName = Restr.lExchangeCurrency.ContainsValue(key) ? Restr.lExchangeCurrency.FirstOrDefault(o => o.Value == key).Value : key;
-
+                                            string text = "";
                                             liPrice.Dispatcher.BeginInvoke(DispatcherPriority.Background,
                                                 (ThreadStart)delegate ()
                                                 {
@@ -1551,10 +1572,16 @@ namespace PoeTradeSearch
                                                     {
                                                         string tName2 = Restr.lExchangeCurrency.ContainsValue(entity[1])
                                                                         ? Restr.lExchangeCurrency.FirstOrDefault(o => o.Value == entity[1]).Value : entity[1];
-                                                        liPrice.Items.Add(Math.Round(1 / amount, 4) + " " + tName2 + " <-> " + Math.Round(amount, 4) + " " + keyName + " [" + account + "]");
+
+                                                        text = Math.Round(1 / amount, 4) + " " + tName2 + " <-> " + Math.Round(amount, 4) + " " + keyName + " [" + account + "]" + " [" + onlineStatus + "]";
+                                                        liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1)});
+
                                                     }
                                                     else
-                                                        liPrice.Items.Add(amount + " " + keyName + " [" + account + "]");
+                                                    {
+                                                        text = amount + " " + keyName + " [" + account + "]" + " [" + onlineStatus + "]";
+                                                        liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1)});
+                                                    }
                                                 }
                                             );
 
@@ -1671,7 +1698,7 @@ namespace PoeTradeSearch
 
         private Thread priceThread = null;
 
-        private void PriceUpdateThreadWorker(ItemOption itemOptions, string[] exchange)
+        private void PriceUpdateThreadWorker(ItemOption itemOptions, string[] exchange, string accountState)
         {
             tkPriceInfo1.Text = tkPriceInfo2.Text = "Price checking...";
             tkPriceCount1.Text = tkPriceCount2.Text = "";
@@ -1682,8 +1709,9 @@ namespace PoeTradeSearch
             priceThread?.Interrupt();
             priceThread?.Abort();
             priceThread = new Thread(() => PriceUpdate(
-                    exchange != null ? exchange : new string[1] { CreateJson(itemOptions, true) },
-                    listCount
+                    exchange != null ? exchange : new string[1] { CreateJson(itemOptions, true, accountState) },
+                    listCount,
+                    accountState
                 ));
             priceThread.Start();
         }

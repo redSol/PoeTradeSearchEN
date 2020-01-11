@@ -15,19 +15,24 @@ namespace PoeTradeSearch
             bool isUpdates = false;
 
             // 마우스 훜시 프로그램에 딜레이가 생겨 쓰레드 처리
-            Thread thread = new Thread(() =>
+            try
             {
-                string u = "https://raw.githubusercontent.com/redSol/PoeTradeSearchEN/master/VERSION";
-                string version = SendHTTP(null, u, 3);
-                if ((version ?? "") != "")
+                Thread thread = new Thread(() =>
                 {
-                    Version version1 = new Version(GetFileVersion());
-                    isUpdates = version1.CompareTo(new Version(version)) < 0;
-                }
-            });
-            thread.Start();
-            thread.Join();
+                    string u = "https://raw.githubusercontent.com/redSol/PoeTradeSearchEN/master/VERSION";
+                    string version = SendHTTP(null, u, 3);
+                    if ((version ?? "") != "")
+                    {
+                        Version version1 = new Version(GetFileVersion());
+                        isUpdates = version1.CompareTo(new Version(version)) < 0;
+                    }
+                });
+                thread.Start();
+                thread.Join();
+            } catch (ArgumentException)
+            {
 
+            }
             return isUpdates;
         }
 
