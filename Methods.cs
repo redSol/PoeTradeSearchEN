@@ -1468,10 +1468,10 @@ namespace PoeTradeSearch
             if (entity.Length > 1)
             {
                 sEentity = String.Format(
-                        "{{\"exchange\":{{\"status\":{{\"option\":\"{3}\"}},\"have\":[\"{0}\"],\"want\":[\"{1}\"]}}}}",
+                        "{{\"exchange\":{{\"status\":{{\"option\":\"{0}\"}},\"have\":[\"{1}\"],\"want\":[\"{2}\"]}}}}",
+                        accountState,
                         entity[0],
-                        entity[1],
-                        accountState
+                        entity[1]
                     );
                 
                 urlString = Restr.ExchangeApi[Restr.ServerLang];
