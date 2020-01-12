@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Windows;
 
@@ -53,6 +54,31 @@ namespace PoeTradeSearch
 
             //public string Rarity;
             public string[] Inherits;
+        }
+
+        [DataContract]
+        internal class PoePrices
+        {
+            [DataMember(Name = "min")]
+            internal double Min = 0.0;
+
+            [DataMember(Name = "max")]
+            internal double Max = 0.0;
+
+            [DataMember(Name = "currency")]
+            internal string Currency = "";
+
+            [DataMember(Name = "pred_explanation")]
+            internal JArray PredExplantion = null;
+
+            [DataMember(Name = "pred_confidence_score")]
+            internal double PredConfidenceScore = 0.0;
+
+            [DataMember(Name = "error")]
+            internal int Error = 0;
+
+            [DataMember(Name = "error_msg")]
+            internal string ErrorMsg = "";
         }
 
         [DataContract()]

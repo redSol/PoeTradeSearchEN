@@ -290,6 +290,20 @@
                     <TextBlock x:Name="tkPriceInfo2" TextAlignment="Right" Margin="5,325,5,0" Text="TextBlock" MouseEnter="TkPrice_Mouse_EnterOrLeave" MouseLeave="TkPrice_Mouse_EnterOrLeave" Cursor="Hand" MouseLeftButtonDown="TkPrice_MouseLeftButtonDown" MouseRightButtonDown="tkPriceInfo_MouseRightButtonDown" />
                 </Grid>
             </TabItem>
+
+            <TabItem x:Name="poePriceTab" Header="poeprices.info" IsEnabled="False">
+                <Grid Margin="0,0,-4,0">
+                    <Grid x:Name="grPoePriceLayout" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="380" Height="283">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <ListBox x:Name="liPoePriceInfo" Grid.IsSharedSizeScope="True" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="0,0,0,1" />
+                        <Button Content="Search poeprices.info" HorizontalAlignment="Left" Margin="0,284,0,-36" VerticalAlignment="Top" Width="380" Height="35" Click="SearchPoePricesBtn"/>
+
+                    </Grid>
+                    <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" HorizontalAlignment="Left" Height="1" Margin="0,319,0,0" VerticalAlignment="Top" Width="385" RenderTransformOrigin="0.5,0.5" />
+                </Grid>
+            </TabItem>
         </TabControl>
         <Button Content="poe.ninja"  HorizontalAlignment="Left" Height="20" Margin="245,1,0,0" VerticalAlignment="Top" Width="56" Click="Button_Click_5" >
             <Button.Resources>

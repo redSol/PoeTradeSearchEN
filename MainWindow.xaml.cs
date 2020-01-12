@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -657,6 +658,43 @@ namespace PoeTradeSearch
             catch (Exception)
             {
                 ForegroundMessage("Failed to link to item's poe.ninja page", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void SearchPoePricesBtn(object sender, RoutedEventArgs e)
+        {
+            string sResult = "";
+            
+            Thread thread = new Thread(() =>
+            {
+                sResult = SendHTTP(null, Restr.PoePriceApi + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(Restr.ModText)));
+                
+            });
+            thread.Start();
+            thread.Join();
+            if (sResult != "")
+            {
+                var jsonData = JsonConvert.DeserializeObject<PoePrices>(sResult);
+                if (jsonData.Error == 0)
+                {
+                    liPoePriceInfo.Items.Add(new ListBoxItem { Content = ("Note: These prices may not be entirely accurate") });
+                    if (jsonData.Min != 0.0)
+                        liPoePriceInfo.Items.Add(new ListBoxItem { Content = ("Min price: " + String.Format("{0:0.0}", jsonData.Min) + " " + jsonData.Currency) });
+                    if (jsonData.Max != 0.0)
+                        liPoePriceInfo.Items.Add(new ListBoxItem { Content = ("Max price: " + String.Format("{0:0.0}", jsonData.Max) + " " + jsonData.Currency) });
+                    liPoePriceInfo.Items.Add(new ListBoxItem { Content = ("Confidence score: " + String.Format("{0:0.00}", jsonData.PredConfidenceScore) + "%") });
+                    if (jsonData.PredExplantion != null)
+                    {
+                        foreach (var items in jsonData.PredExplantion)
+                        {
+                            liPoePriceInfo.Items.Add(new ListBoxItem { Content = ("Mod: " + items[0] + ", " + String.Format("{0:0.00}", items[1])) });
+                        }
+                    }
+                    
+                } else
+                {
+                    liPoePriceInfo.Items.Add(new ListBoxItem { Content = ("There was an error: " + jsonData.ErrorMsg ) });
+                }
             }
         }
     }

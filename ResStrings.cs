@@ -11,9 +11,12 @@ namespace PoeTradeSearch
         internal static string[] TradeApi = { "https://poe.game.daum.net/api/trade/search/", "https://www.pathofexile.com/api/trade/search/" };
         internal static string[] FetchApi = { "https://poe.game.daum.net/api/trade/fetch/", "https://www.pathofexile.com/api/trade/fetch/" };
         internal static string[] ExchangeApi = { "https://poe.game.daum.net/api/trade/exchange/", "https://www.pathofexile.com/api/trade/exchange/" };
+        internal static string PoePriceApi = "https://www.poeprices.info/api?l=Metamorph&i=";
 
         internal static byte ServerLang = 1;
         internal static string ServerType = "";
+
+        internal static string ModText = "";
 
         internal const string All = "All";
         internal const string Max = "Max";

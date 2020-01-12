@@ -196,6 +196,9 @@ namespace PoeTradeSearch
             cbElderGuardian.Visibility = Visibility.Hidden;
             cbMapInfluence.Visibility = Visibility.Hidden;
 
+            poePriceTab.IsEnabled = false;
+            liPoePriceInfo.Items.Clear();
+
             cbRarity.Items.Clear();
             cbRarity.Items.Add(Restr.All);
             cbRarity.Items.Add(Restr.Normal);
@@ -237,6 +240,7 @@ namespace PoeTradeSearch
         private StringDictionary metamorphMods = new StringDictionary();
         private void ItemTextParser(string itemText, bool isWinShow = true)
         {
+            Restr.ModText = itemText;
             string itemName = "";
             string itemType = "";
             string itemRarity = "";
@@ -333,6 +337,8 @@ namespace PoeTradeSearch
                             }
                             else
                             {
+                                if (itemRarity == Restr.Rare)
+                                    poePriceTab.IsEnabled = true;
                                 if (itemRarity == Restr.Gem && (Restr.Vaal + " " + itemType) == asTmp[0])
                                     lItemOption[Restr.Vaal] = "_TRUE_";
                                 else if (!is_prophecy && asTmp[0].IndexOf(Restr.ChkProphecy) == 0)
@@ -559,18 +565,18 @@ namespace PoeTradeSearch
                                             {
                                                 if (min != 99999)
                                                 {
-                                                    min = Math.Floor(min * (mConfigData.Options.UniqueMinValuePercent / 100));
+                                                    min = min * (mConfigData.Options.UniqueMinValuePercent / 100);
                                                     if (mConfigData.Options.SetMaxValue)
-                                                        max = Math.Floor(min * (mConfigData.Options.UniqueMaxValuePercent / 100));
+                                                        max = min * (mConfigData.Options.UniqueMaxValuePercent / 100);
                                                 }
                                             }
                                             else
                                             {
                                                 if (min != 99999)
                                                 {
-                                                    min = Math.Floor(min * (mConfigData.Options.MinValuePercent / 100));
+                                                    min = min * (mConfigData.Options.MinValuePercent / 100);
                                                     if (mConfigData.Options.SetMaxValue)
-                                                        max = Math.Floor(min * (mConfigData.Options.MaxValuePercent / 100));
+                                                        max = min * (mConfigData.Options.MaxValuePercent / 100);
                                                 }
                                             }
                                         }
