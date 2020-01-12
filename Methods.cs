@@ -632,13 +632,18 @@ namespace PoeTradeSearch
                         tbLinksMin.Text = link > 0 ? link.ToString() : "";
                         ckSocket.IsChecked = link > 4;
                     }
-
+                    
+                    //check if item is corrupted
+                    bool is_corrupted = lItemOption[Restr.Corrupt] == "_TRUE_";
                     bool is_blight = false;
                     bool is_unIdentify = lItemOption[Restr.Unidentify] == "_TRUE_";
                     bool is_map = lItemOption[Restr.MaTier] != "";
                     bool is_gem = itemRarity == Restr.Gem;
                     bool is_currency = itemRarity == Restr.Currency;
                     bool is_divinationCard = itemRarity == Restr.DivinationCard;
+
+                    //if no option is selected in config, use item corruption status. Otherwise, use the config value
+                    cbCorrupt.SelectedIndex = (int)cbCorrupt.SelectedIndex == 0 ? (is_corrupted ? 1 : 2) : cbCorrupt.SelectedIndex;
 
                     if (is_map || is_currency) is_map_fragment = false;
                     bool is_detail = is_gem || is_currency || is_divinationCard || is_prophecy || is_map_fragment;
