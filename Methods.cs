@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -28,11 +29,30 @@ namespace PoeTradeSearch
             try
             {
                 fs = new FileStream(path + "Config.txt", FileMode.Open);
+                string configText = "";
+                string configBackup = "";
                 using (StreamReader reader = new StreamReader(fs))
                 {
                     fs = null;
-                    string json = reader.ReadToEnd();
-                    mConfigData = Json.Deserialize<ConfigData>(json);
+                    configText = reader.ReadToEnd();
+                    configBackup = configText;
+                }
+
+                using (StreamWriter writer = new StreamWriter(path + "Config.txt", false, Encoding.UTF8))
+                {
+                    try
+                    {
+                        ConfigData configData = JsonConvert.DeserializeObject<ConfigData>(configText);
+                        configText = JsonConvert.SerializeObject(configData, Formatting.Indented);
+                        writer.Write(configText);
+                    } catch (Exception ex)
+                    {
+                        writer.Write(configBackup);
+                        MessageBox.Show(Application.Current.MainWindow, ex.Message, "Error");
+                        
+                        return false;
+                    }
+                    mConfigData = Json.Deserialize<ConfigData>(configText);
                 }
 
                 if (mConfigData.Options.SearchPriceCount > 80)
@@ -158,6 +178,8 @@ namespace PoeTradeSearch
             lbDPS.Content = "Options";
             SetSearchButtonText();
 
+            Topmost = mConfigData.Options.AlwaysOnTop;
+            
             ckLv.Content = Restr.Lv;
             Synthesis.Content = "Synthesis";
             lbSocketBackground.Visibility = Visibility.Hidden;
@@ -296,7 +318,6 @@ namespace PoeTradeSearch
                             }
                             else if (asOpt[j].Contains("Area is influenced by The Shaper"))
                             {
-                                is_elder_map = true;
                                 asOpt[j] = "Area is influenced by 1 (implicit)";
                                 cbMapInfluence.SelectedIndex = 1;
                             }
@@ -538,18 +559,18 @@ namespace PoeTradeSearch
                                             {
                                                 if (min != 99999)
                                                 {
-                                                    min = Math.Ceiling(min * (mConfigData.Options.UniqueMinValuePercent / 100));
+                                                    min = Math.Floor(min * (mConfigData.Options.UniqueMinValuePercent / 100));
                                                     if (mConfigData.Options.SetMaxValue)
-                                                        max = Math.Ceiling(min * (mConfigData.Options.UniqueMaxValuePercent / 100));
+                                                        max = Math.Floor(min * (mConfigData.Options.UniqueMaxValuePercent / 100));
                                                 }
                                             }
                                             else
                                             {
                                                 if (min != 99999)
                                                 {
-                                                    min = Math.Ceiling(min * (mConfigData.Options.MinValuePercent / 100));
+                                                    min = Math.Floor(min * (mConfigData.Options.MinValuePercent / 100));
                                                     if (mConfigData.Options.SetMaxValue)
-                                                        max = Math.Ceiling(min * (mConfigData.Options.MaxValuePercent / 100));
+                                                        max = Math.Floor(min * (mConfigData.Options.MaxValuePercent / 100));
                                                 }
                                             }
                                         }
@@ -960,7 +981,13 @@ namespace PoeTradeSearch
                     else
                         cbName.Content = (Regex.Replace(itemName, @"\([a-zA-Z\s']+\)$", "") + " " + Regex.Replace(itemType, @"\([a-zA-Z\s']+\)$", "")).Trim();
 
-                    cbName.IsChecked = (itemRarity != Restr.Rare && itemRarity != Restr.Magic) || !(by_type && mConfigData.Options.SearchByType);
+                    //cbName.IsChecked = (itemRarity != Restr.Rare && itemRarity != Restr.Magic) || !(by_type && mConfigData.Options.SearchByType);
+
+                    if (itemRarity != Restr.Unique && itemRarity != Restr.Normal)
+                        cbName.IsChecked = mConfigData.Options.SearchByType;
+                    else
+                        cbName.IsChecked = true;
+
 
                     if (is_elder_map)
                     {
@@ -1930,6 +1957,14 @@ namespace PoeTradeSearch
                                         System.Windows.Forms.SendKeys.SendWait("^{v}");
                                         System.Windows.Forms.SendKeys.SendWait("{enter}");
                                     }*/
+                                }
+                                else if (valueLower.IndexOf("{invite}") == 0)
+                                {
+                                    System.Windows.Forms.SendKeys.SendWait("^{ENTER}");
+                                    System.Windows.Forms.SendKeys.SendWait("{HOME}");
+                                    System.Windows.Forms.SendKeys.SendWait("{DELETE}");
+                                    System.Windows.Forms.SendKeys.SendWait("/invite ");
+                                    System.Windows.Forms.SendKeys.SendWait("{ENTER}");
                                 }
                                 else if (valueLower.IndexOf("{link}") == 0)
                                 {

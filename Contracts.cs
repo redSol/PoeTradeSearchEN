@@ -133,6 +133,9 @@ namespace PoeTradeSearch
 
             [DataMember(Name = "data_version")]
             internal string DataVersion = null;
+
+            [DataMember(Name = "always_on_top")]
+            internal bool AlwaysOnTop = true;
         }
 
         [DataContract(Name = "shortcuts")]
