@@ -8,7 +8,7 @@ Usage: Ctrl+C on an item to price check
 Additional shortcuts are located in the config file
 
 Features:
-- Fetches prices from official pathofexile website
+- Fetches prices from official pathofexile api
 - Has an advanced item search, can edit min and max values
 - Has a currency exchange search
   -> Preview: https://i.gyazo.com/4acb48d4dcef6e2d7957922bc59403be.png
