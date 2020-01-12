@@ -51,7 +51,7 @@
         <Button Content="EN" HorizontalAlignment="Left" Margin="245,479,0,-2" VerticalAlignment="Top" Height="19" Width="19" Tag="1" Click="Button_Click_2" Visibility="Hidden" />
         <Button x:Name="btnClose" Content="Close" HorizontalAlignment="Left" Margin="307,470,0,0" VerticalAlignment="Top" Width="95" Height="38" Click="Button_Click_1" IsDefault="True" FontWeight="Bold" />
 
-        <TabControl x:Name="tabControl1" BorderThickness="0 1" Height="380" Margin="0,75,-2,0" VerticalAlignment="Top" TabStripPlacement="Bottom" SelectionChanged="tabControl1_SelectionChanged" HorizontalAlignment="Left" Width="404">
+        <TabControl x:Name="tabControl1" BorderThickness="0 1" Height="380" Margin="0,75,0,0" VerticalAlignment="Top" TabStripPlacement="Bottom" SelectionChanged="tabControl1_SelectionChanged" HorizontalAlignment="Left" Width="402">
             <TabControl.Resources>
                 <Style TargetType="{x:Type TabPanel}">
                     <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -269,12 +269,11 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
-                        <ListBox x:Name="liPrice" Grid.IsSharedSizeScope="True" Height="{Binding ActualHeight, ElementName=grPriceLayout}" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="0,0,0,1" >
-                        </ListBox>
+                        <ListBox x:Name="liPrice" Grid.IsSharedSizeScope="True" Height="{Binding ActualHeight, ElementName=grPriceLayout}" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="0,0,0,1" Margin="0,0,-17,0" />
                     </Grid>
 
-                    <Label Content="Min Value:" HorizontalAlignment="Left" Margin="155,288,0,0" VerticalAlignment="Top" />
-                    <TextBox x:Name="tbPriceFilterMin" HorizontalAlignment="Left" Height="22" Margin="221,290,0,0" Text="" VerticalAlignment="Top" Width="33" BorderThickness="0,0,0,1" PreviewMouseLeftButtonDown="TbOpt0_0_PreviewMouseLeftButtonDown" />
+                    <Label Content="Min Value:" HorizontalAlignment="Left" Margin="155,288,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
+                    <TextBox x:Name="tbPriceFilterMin" HorizontalAlignment="Left" Height="22" Margin="221,290,0,0" Text="" VerticalAlignment="Top" Width="33" BorderThickness="0,0,0,1" PreviewMouseLeftButtonDown="TbOpt0_0_PreviewMouseLeftButtonDown" Visibility="Hidden"/>
 
                     <Label Content="Result Count:" HorizontalAlignment="Left" Margin="251,288,0,0" VerticalAlignment="Top" />
                     <ComboBox x:Name="cbPriceListCount" HorizontalAlignment="Left" Margin="334,290,0,0" VerticalAlignment="Top" MaxDropDownHeight="282" Width="50">
@@ -288,6 +287,8 @@
 
                     <TextBlock x:Name="tkPriceCount2" Text="0" HorizontalAlignment="Left" Margin="4,325,0,0" VerticalAlignment="Top" />
                     <TextBlock x:Name="tkPriceInfo2" TextAlignment="Right" Margin="5,325,5,0" Text="TextBlock" MouseEnter="TkPrice_Mouse_EnterOrLeave" MouseLeave="TkPrice_Mouse_EnterOrLeave" Cursor="Hand" MouseLeftButtonDown="TkPrice_MouseLeftButtonDown" MouseRightButtonDown="tkPriceInfo_MouseRightButtonDown" />
+                    <Label x:Name="lbPriceMinStock" Content="Minimum Stock:" HorizontalAlignment="Left" Margin="1,288,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="tbPriceMinStock" HorizontalAlignment="Left" Height="22" Margin="99,290,0,0" Text="" VerticalAlignment="Top" Width="33" BorderThickness="0,0,0,1" PreviewMouseLeftButtonDown="TbOpt0_0_PreviewMouseLeftButtonDown"/>
                 </Grid>
             </TabItem>
 

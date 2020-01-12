@@ -239,13 +239,15 @@ namespace PoeTradeSearch
             string url = "";
             string[] exchange = null;
             string accountState = (string)cbAccountState.SelectedValue;
+            
             if (bdExchange.Visibility == Visibility.Visible && (cbOrbs.SelectedIndex > 0 || cbSplinters.SelectedIndex > 0))
             {
                 exchange = new string[2];
                 exchange[0] = Restr.lExchangeCurrency[mItemBaseName.TypeEN];
                 exchange[1] = Restr.lExchangeCurrency[(string)(cbOrbs.SelectedIndex > 0 ? cbOrbs.SelectedValue : cbSplinters.SelectedValue)];
+                int minimumStock = int.Parse(tbPriceMinStock.Text);
                 url = Restr.ExchangeApi[Restr.ServerLang] + Restr.ServerType + "/?redirect&source=";
-                url += Uri.EscapeDataString("{\"exchange\":{\"status\":{\"option\":\"" + accountState + "\"},\"have\":[\"" + exchange[0] + "\"],\"want\":[\"" + exchange[1] + "\"]}}");
+                url += Uri.EscapeDataString("{\"exchange\":{\"status\":{\"option\":\"" + accountState + "\"},\"have\":[\"" + exchange[0] + "\"],\"want\":[\"" + exchange[1] + "\"],\"minimum\":"+ minimumStock + "}}");
                 Process.Start(url);
             }
             else
@@ -382,8 +384,11 @@ namespace PoeTradeSearch
                 exchange[0] = Restr.lExchangeCurrency[mItemBaseName.TypeEN];
                 exchange[1] = Restr.lExchangeCurrency[(string)(cbOrbs.SelectedIndex > 0 ? cbOrbs.SelectedValue : cbSplinters.SelectedValue)];
             }
-
-            PriceUpdateThreadWorker(exchange != null ? null : GetItemOptions(), exchange, (string)cbAccountState.SelectedValue);
+            lbPriceMinStock.Visibility = Visibility.Visible;
+            tbPriceMinStock.Visibility = Visibility.Visible;
+            tbPriceMinStock.IsEnabled = true;
+            
+            PriceUpdateThreadWorker(exchange != null ? null : GetItemOptions(), exchange, (string)cbAccountState.SelectedValue, int.Parse(tbPriceMinStock.Text));
         }
 
         private void tkPriceInfo_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -415,7 +420,7 @@ namespace PoeTradeSearch
             {
                 try
                 {
-                    PriceUpdateThreadWorker(GetItemOptions(), null, (string)cbAccountState.SelectedValue);
+                    PriceUpdateThreadWorker(GetItemOptions(), null, (string)cbAccountState.SelectedValue, 0);
                 }
                 catch (Exception)
                 {

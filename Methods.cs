@@ -211,6 +211,9 @@ namespace PoeTradeSearch
             cbAccountState.Items.Add("any");
             cbAccountState.SelectedIndex = 0;
 
+            tbPriceMinStock.Text = "1";
+            tbPriceMinStock.IsEnabled = false;
+
             tabControl1.SelectedIndex = 0;
             cbPriceListCount.SelectedIndex = (int)Math.Ceiling(mConfigData.Options.SearchPriceCount / 20) - 1;
             tbPriceFilterMin.Text = mConfigData.Options.SearchPriceMin > 0 ? mConfigData.Options.SearchPriceMin.ToString() : "";
@@ -1066,7 +1069,7 @@ namespace PoeTradeSearch
 
                     if (isWinShow || this.Visibility == Visibility.Visible)
                     {
-                        PriceUpdateThreadWorker(GetItemOptions(), null, (string)cbAccountState.SelectedValue);
+                        PriceUpdateThreadWorker(GetItemOptions(), null, (string)cbAccountState.SelectedValue, 0);
 
                         tkPriceInfo1.Foreground = tkPriceInfo2.Foreground = System.Windows.SystemColors.WindowTextBrush;
                         tkPriceCount1.Foreground = tkPriceCount2.Foreground = System.Windows.SystemColors.WindowTextBrush;
@@ -1492,28 +1495,31 @@ namespace PoeTradeSearch
             
         }
 
-        private void PriceUpdate(string[] entity, int listCount, string accountState)
+        private void PriceUpdate(string[] entity, int listCount, string accountState, int minimumStock)
         {
             string result = "Waiting for results...";
             string result2 = "";
             string urlString = "";
             string sEentity;
+            bool currencyExchange;
             if (entity.Length > 1)
             {
                 sEentity = String.Format(
-                        "{{\"exchange\":{{\"status\":{{\"option\":\"{0}\"}},\"have\":[\"{1}\"],\"want\":[\"{2}\"]}}}}",
+                        "{{\"exchange\":{{\"status\":{{\"option\":\"{0}\"}},\"have\":[\"{1}\"],\"want\":[\"{2}\"], \"minimum\": {3}}}}}",
                         accountState,
                         entity[0],
-                        entity[1]
+                        entity[1],
+                        minimumStock
                     );
-                
                 urlString = Restr.ExchangeApi[Restr.ServerLang];
+                currencyExchange = true;
             }
             else
             {
                 sEentity = entity[0];
                 
                 urlString = Restr.TradeApi[Restr.ServerLang];
+                currencyExchange = false;
             }
             
             if (sEentity != null && sEentity != "")
@@ -1561,7 +1567,7 @@ namespace PoeTradeSearch
                                 }
 
                                 string jsonResult = "";
-                                string url = Restr.FetchApi[Restr.ServerLang] + string.Join(",", tmp) + "?query=" + resultData.ID;
+                                string url = Restr.FetchApi[Restr.ServerLang] + string.Join(",", tmp) + "?query=" + resultData.ID + (currencyExchange ? "&exchange" : "");
                                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
                                 request.Timeout = 10000;
 
@@ -1577,13 +1583,14 @@ namespace PoeTradeSearch
                                     fetchData.Result = new FetchDataInfo[5];
 
                                     fetchData = Json.Deserialize<FetchData>(jsonResult);
-
                                     for (int i = 0; i < fetchData.Result.Length; i++)
                                     {
                                         if (fetchData.Result[i] == null)
                                             break;
 
-                                        if (fetchData.Result[i].Listing.Price != null && fetchData.Result[i].Listing.Price.Amount > 0)
+                                        if ((!currencyExchange && (fetchData.Result[i].Listing.Price != null && fetchData.Result[i].Listing.Price.Amount > 0)) ||
+                                            (currencyExchange && (fetchData.Result[i].Listing.Price != null && fetchData.Result[i].Listing.Price.Exchange != null &&
+                                            fetchData.Result[i].Listing.Price.Item != null)))
                                         {
                                             string account = fetchData.Result[i].Listing.Account.Name;
 
@@ -1592,26 +1599,70 @@ namespace PoeTradeSearch
                                                 if (fetchData.Result[i].Listing.Account.Online == null)
                                                     onlineStatus = "Offline"; 
                                             }
-                                            
 
-                                            string key = fetchData.Result[i].Listing.Price.Currency;
-                                            double amount = fetchData.Result[i].Listing.Price.Amount;
-                                            string keyName = Restr.lExchangeCurrency.ContainsValue(key) ? Restr.lExchangeCurrency.FirstOrDefault(o => o.Value == key).Value : key;
+                                            string buyerCurrency = "";
+                                            double buyerAmount = 0;
+                                            string sellerCurrency = "";
+                                            double sellerAmount = 0;
+                                            int sellerStock = 0;
+
+                                            string key = "";
+                                            double amount = 0;
+                                            string keyName = "";
+                                            if (currencyExchange)
+                                            {
+
+                                                buyerCurrency = fetchData.Result[i].Listing.Price.Exchange.Currency;
+                                                buyerAmount = fetchData.Result[i].Listing.Price.Exchange.Amount;
+
+                                                sellerCurrency = fetchData.Result[i].Listing.Price.Item.Currency;
+                                                sellerAmount = fetchData.Result[i].Listing.Price.Item.Amount;
+                                                sellerStock = fetchData.Result[i].Listing.Price.Item.Stock;
+
+                                                key = fetchData.Result[i].Listing.Price.Exchange.Currency;
+                                                amount = fetchData.Result[i].Listing.Price.Exchange.Amount;
+                                                keyName = Restr.lExchangeCurrency.ContainsValue(key) ? Restr.lExchangeCurrency.FirstOrDefault(o => o.Value == key).Value : key;
+                                            }
+                                            else
+                                            {
+
+                                                key = fetchData.Result[i].Listing.Price.Currency;
+                                                amount = fetchData.Result[i].Listing.Price.Amount;
+                                                keyName = Restr.lExchangeCurrency.ContainsValue(key) ? Restr.lExchangeCurrency.FirstOrDefault(o => o.Value == key).Value : key;
+                                            }
                                             string text = "";
                                             liPrice.Dispatcher.BeginInvoke(DispatcherPriority.Background,
                                                 (ThreadStart)delegate ()
                                                 {
                                                     if (entity.Length > 1)
                                                     {
+
+                                                        
                                                         string tName2 = Restr.lExchangeCurrency.ContainsValue(entity[1])
                                                                         ? Restr.lExchangeCurrency.FirstOrDefault(o => o.Value == entity[1]).Value : entity[1];
 
-                                                        text = Math.Round(1 / amount, 4) + " " + tName2 + " <-> " + Math.Round(amount, 4) + " " + keyName + " [" + account + "]" + " [" + onlineStatus + "]";
+                                                        string ratioString = "";
+                                                        double ratio = 0;
+                                                        //text = Math.Round(1 / amount, 4) + " " + tName2 + " <-> " + Math.Round(amount, 4) + " " + keyName + " [" + account + "]" + " [" + onlineStatus + "]";
+                                                        if (sellerAmount != 1 && buyerAmount != 1)
+                                                        {
+                                                            if (sellerAmount > buyerAmount)
+                                                            {
+                                                                ratio = (sellerAmount / buyerAmount);
+                                                                ratioString = " [" + String.Format("{0:0.00}", ratio) + " " + sellerCurrency + " per] ";
+                                                            } else
+                                                            {
+                                                                ratio = (buyerAmount / sellerAmount);
+                                                                ratioString = " [" + String.Format("{0:0.00}", ratio) + " " + buyerCurrency + " per] ";
+                                                            }
+                                                        }
+                                                        text = "[Stock:" + sellerStock + "], " + sellerAmount + " " + sellerCurrency + " <-> " + buyerAmount + " " + buyerCurrency + ratioString + " [" + account + "]";
                                                         liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1)});
 
                                                     }
                                                     else
                                                     {
+
                                                         text = amount + " " + keyName + " [" + account + "]" + " [" + onlineStatus + "]";
                                                         liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1)});
                                                     }
@@ -1694,9 +1745,9 @@ namespace PoeTradeSearch
                             }
                         );
 
-                        if (resultData.Total == 0 || currencys.Count == 0)
+                        if ((resultData.Total == 0 || currencys.Count == 0))
                         {
-                            result = "There is no transaction of the goods";
+                            result = "There is no results.";
                         }
                     }
                 }
@@ -1709,14 +1760,20 @@ namespace PoeTradeSearch
             tkPriceInfo1.Dispatcher.BeginInvoke(DispatcherPriority.Background,
                 (ThreadStart)delegate ()
                 {
-                    tkPriceInfo1.Text = result + (result2 != "" ? " = " + result2 : "");
+                    if (!currencyExchange)
+                        tkPriceInfo1.Text = result + (result2 != "" ? " = " + result2 : "");
+                    else
+                        tkPriceInfo1.Text = "Check detailed tab";
                 }
             );
 
             tkPriceInfo2.Dispatcher.BeginInvoke(DispatcherPriority.Background,
                 (ThreadStart)delegate ()
                 {
-                    tkPriceInfo2.Text = result + (result2 != "" ? " = " + result2 : "");
+                    if (!currencyExchange)
+                        tkPriceInfo2.Text = result + (result2 != "" ? " = " + result2 : "");
+                    else
+                        tkPriceInfo2.Text = "Results loaded";
                 }
             );
 
@@ -1731,7 +1788,7 @@ namespace PoeTradeSearch
 
         private Thread priceThread = null;
 
-        private void PriceUpdateThreadWorker(ItemOption itemOptions, string[] exchange, string accountState)
+        private void PriceUpdateThreadWorker(ItemOption itemOptions, string[] exchange, string accountState, int minimumStock)
         {
             tkPriceInfo1.Text = tkPriceInfo2.Text = "Price checking...";
             tkPriceCount1.Text = tkPriceCount2.Text = "";
@@ -1744,7 +1801,8 @@ namespace PoeTradeSearch
             priceThread = new Thread(() => PriceUpdate(
                     exchange != null ? exchange : new string[1] { CreateJson(itemOptions, true, accountState) },
                     listCount,
-                    accountState
+                    accountState,
+                    minimumStock
                 ));
             priceThread.Start();
         }

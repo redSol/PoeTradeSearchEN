@@ -324,6 +324,35 @@ namespace PoeTradeSearch
 
             [DataMember(Name = "currency")]
             internal string Currency = "";
+
+            [DataMember(Name = "exchange")]
+            internal ExchangeInfo Exchange = new ExchangeInfo();
+
+            [DataMember(Name = "item")]
+            internal ItemInfo Item = new ItemInfo();
+        }
+
+        [DataContract]
+        internal class ExchangeInfo
+        {
+            [DataMember(Name = "currency")]
+            internal string Currency = "";
+
+            [DataMember(Name = "amount")]
+            internal double Amount = 0;
+        }
+
+        [DataContract]
+        internal class ItemInfo
+        {
+            [DataMember(Name = "currency")]
+            internal string Currency = "";
+
+            [DataMember(Name = "amount")]
+            internal double Amount = 0;
+
+            [DataMember(Name = "stock")]
+            internal int Stock = 0;
         }
 
         [DataContract]
