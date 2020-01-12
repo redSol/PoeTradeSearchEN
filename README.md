@@ -7,12 +7,18 @@ Usage: Ctrl+C on an item to price check
 
 Additional shortcuts are located in the config file
 
-Uses the official path of exile website to fetch item prices instead of poe.trade.
+Features:
+- Fetches prices from official pathofexile website
+- Has an advanced item search, can edit min and max values
+- Has a currency exchange search
+- Has a dangerous map mod checker, will highlight mods in red if the mod is set in the config file
+ -> Example: https://i.gyazo.com/b9fe5b00eb17c75a4eff10efb1cd9142.png
+- Has hotkeys for quality of life uses, such as ctrl + scroll wheel for stash tabs, /hideout, /oos, /kick charactername, a fast invite macro, and more which are customizable
+- Has a poeprices.info tab for rare items
+- Can show price results in the UI instead of opening browser, but also has the ability to open the item you are searching in browser
 
-Can price check almost anything, including rare items, if you do happen to find an item that you are not able to price check, please submit an issue.
+And more
 
-Has a dangerous mod checker for maps which can be set in the config file
-Example: https://i.gyazo.com/b9fe5b00eb17c75a4eff10efb1cd9142.png
 
 need atleast .net 4.6 framework for program to work
 
