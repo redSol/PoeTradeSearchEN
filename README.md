@@ -138,4 +138,5 @@ Config.txt
 		      "text": "Monsters reflect #% of Physical Damage"
 		    }
 		  ]
-}```
+}
+```
