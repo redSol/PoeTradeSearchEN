@@ -40,27 +40,102 @@ Config.txt
 			"auto_select_corrupt":"no",     //If an item is corrupted, sets it to the value you have set ["yes", "no"]
 			"ctrl_wheel":true,              //Enables ctrl_wheel for scrolling through stash tabs [true, false]
 			"check_updates":true,           //Checks for update [true, false]
-			"data_version":"3.9.2"
+			"data_version":"3.9.2",
+			"always_on_top": true  		//If you want the UI to always stay on top no matter what process has focus [true, false]
 		},
-	"shortcuts":[
-			{"keycode":116,"value":"{Enter}/hideout{Enter}","Detail":"은신처 이동 (F5)"},
-			{"keycode":115,"value":"{Enter}/exit{Enter}","Detail":"나가기 (F4)"},
-			{"keycode":113,"value":"{Enter}/oos{Enter}","Detail":"남은 몬스터 수 (F2)"},
-			{"keycode":118,"value":"Syndicate_0.jpg","position":"0x0","Detail":"이미지 출력, 단, .jpg만 가능 (F9)"},
-			{"keycode":119,"value":"Temple_0.png","position":"0x0","Detail":"이미지 출력, 단, .jpg만 가능 (F10)"},
-			{"keycode":122,"value":"{Pause}","Detail":"일시 중지 (F11)"},
-			{"keycode":27,"value":"{Close}","Detail":"창 닫기 (ESC)"},
-			{"keycode":78,"ctrl":true,"value":"{Link}https://poe.ninja/{Link}","Detail":"닌자 열기 (Ctrl+N)"},
-			{"keycode":72,"ctrl":true,"value":"{Wiki}","Detail":"위키 열기 (Ctrl+H)"},
-			{"keycode":0,"ctrl":true,"value":"{Run}","Detail":"작동키 (Ctrl+C) 변경은 프로젝트 홈 위키 참고"}
-		],
-	"checked":[ // Auto selects mods
-			{"id":"Jewels/Amulets/Rings/Belts/Quivers/Armours/","text":"#% to Fire Resistance", "mod_type":"pseudo/explicit/implicit/crafted"}, 
-			{"id":"Jewels/Amulets/Rings/Belts/Quivers/Armours/","text":"#% to Lightning Resistance", "mod_type":"pseudo/explicit/"},
-			{"id":"Belts/","text":"# to Strength", "mod_type":"all"},
-		], 
-	"dangerous_mods":[ // Highlights dangerous map mods set
-			{"id":"Maps/","text":"Monsters reflect #% of Elemental Damage"},
-			{"id":"Maps/","text":"Monsters reflect #% of Physical Damage"},
-		]
+	"shortcuts": [
+		    {
+		      "keycode": 117,
+		      "value": "{invite}",
+		      "position": null,
+		      "ctrl": false
+		    },
+		    {
+		      "keycode": 116,
+		      "value": "{Enter}/hideout{Enter}",
+		      "position": null,
+		      "ctrl": false
+		    },
+		    {
+		      "keycode": 115,
+		      "value": "{Enter}/kick charactername{Enter}",
+		      "position": null,
+		      "ctrl": false
+		    },
+		    {
+		      "keycode": 113,
+		      "value": "{Enter}/oos{Enter}",
+		      "position": null,
+		      "ctrl": false
+		    },
+		    {
+		      "keycode": 118,
+		      "value": "Syndicate_0.jpg",
+		      "position": "0x0",
+		      "ctrl": false
+		    },
+		    {
+		      "keycode": 119,
+		      "value": "Temple_0.jpg",
+		      "position": "0x0",
+		      "ctrl": false
+		    },
+		    {
+		      "keycode": 122,
+		      "value": "{Pause}",
+		      "position": null,
+		      "ctrl": false
+		    },
+		    {
+		      "keycode": 27,
+		      "value": "{Close}",
+		      "position": null,
+		      "ctrl": false
+		    },
+		    {
+		      "keycode": 78,
+		      "value": "{Link}https://poe.ninja/{Link}",
+		      "position": null,
+		      "ctrl": true
+		    },
+		    {
+		      "keycode": 72,
+		      "value": "{Wiki}",
+		      "position": null,
+		      "ctrl": true
+		    },
+		    {
+		      "keycode": 0,
+		      "value": "{Run}",
+		      "position": null,
+		      "ctrl": true
+		    }
+		  ],
+		  "checked": [
+		    {
+		      "id": "Jewels/Amulets/Rings/Belts/Quivers/Armours/",
+		      "text": "#% to Fire Resistance",
+		      "mod_type": "pseudo/explicit/implicit/crafted"
+		    },
+		    {
+		      "id": "Jewels/Amulets/Rings/Belts/Quivers/Armours/",
+		      "text": "#% to Lightning Resistance",
+		      "mod_type": "pseudo/explicit/"
+		    },
+		    {
+		      "id": "Belts/",
+		      "text": "# to Strength",
+		      "mod_type": "all"
+		    }
+		  ],
+		  "dangerous_mods": [
+		    {
+		      "id": "Maps/",
+		      "text": "Monsters reflect #% of Elemental Damage"
+		    },
+		    {
+		      "id": "Maps/",
+		      "text": "Monsters reflect #% of Physical Damage"
+		    }
+		  ]
 }```
