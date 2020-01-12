@@ -11,8 +11,9 @@ Features:
 - Fetches prices from official pathofexile website
 - Has an advanced item search, can edit min and max values
 - Has a currency exchange search
+  -> Preview: https://i.gyazo.com/4acb48d4dcef6e2d7957922bc59403be.png
 - Has a dangerous map mod checker, will highlight mods in red if the mod is set in the config file
- -> Example: https://i.gyazo.com/b9fe5b00eb17c75a4eff10efb1cd9142.png
+  -> Example: https://i.gyazo.com/b9fe5b00eb17c75a4eff10efb1cd9142.png
 - Has hotkeys for quality of life uses, such as ctrl + scroll wheel for stash tabs, /hideout, /oos, /kick charactername, a fast invite macro, and more which are customizable
 - Has a poeprices.info tab for rare items
 - Can show price results in the UI instead of opening browser, but also has the ability to open the item you are searching in browser
