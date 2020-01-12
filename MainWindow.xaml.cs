@@ -202,7 +202,7 @@ namespace PoeTradeSearch
 
         private void Window_Activated(object sender, EventArgs e)
         {
-
+            Activate();
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
