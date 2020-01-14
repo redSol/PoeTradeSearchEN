@@ -54,7 +54,6 @@ namespace PoeTradeSearch
                     }
                     mConfigData = Json.Deserialize<ConfigData>(configText);
                 }
-
                 if (mConfigData.Options.SearchPriceCount > 80)
                     mConfigData.Options.SearchPriceCount = 80;
                 //-----------------------------
@@ -176,11 +175,12 @@ namespace PoeTradeSearch
             cbSplinters.FontWeight = FontWeights.Normal;
 
             lbDPS.Content = "Options";
+            lbBuyPay.Content = "";
             SetSearchButtonText();
 
             Topmost = mConfigData.Options.AlwaysOnTop;
             
-            ckLv.Content = Restr.Lv;
+            ckLv.Content = "iLevel";
             Synthesis.Content = "Synthesis";
             lbSocketBackground.Visibility = Visibility.Hidden;
 
@@ -233,6 +233,8 @@ namespace PoeTradeSearch
                 ((TextBox)this.FindName("tbOpt" + i + "_1")).BorderBrush = SystemColors.ActiveBorderBrush;
                 ((CheckBox)this.FindName("tbOpt" + i + "_2")).BorderBrush = SystemColors.ActiveBorderBrush;
                 ((CheckBox)this.FindName("tbOpt" + i + "_3")).BorderBrush = SystemColors.ActiveBorderBrush;
+
+                ((Label)this.FindName("lbOpt" + i)).Content = "";
 
                 ((ComboBox)this.FindName("cbOpt" + i)).Items.Clear();
                 // ((ComboBox)this.FindName("cbOpt" + i)).ItemsSource = new List<FilterEntrie>();
@@ -293,45 +295,10 @@ namespace PoeTradeSearch
 
                             string[] asTmp = asOpt[j].Split(':');
 
-                            if (asOpt[j].Contains("Map is occupied by The Enslaver"))
+                            if (asOpt[j].Contains("Cannot be Frozen"))
                             {
-                                asOpt[j] = "Map is occupied by 1 (implicit)";
-                                is_elder_map = true;
-                                cbElderGuardian.SelectedIndex = 1;
+                                asOpt[j] = "100% chance to Avoid being Frozen";
                             }
-                            else if (asOpt[j].Contains("Map is occupied by The Eradicator"))
-                            {
-                                asOpt[j] = "Map is occupied by 2 (implicit)";
-                                is_elder_map = true;
-                                cbElderGuardian.SelectedIndex = 2;
-                            }
-                            else if (asOpt[j].Contains("Map is occupied by The Constrictor"))
-                            {
-                                asOpt[j] = "Map is occupied by 3 (implicit)";
-                                is_elder_map = true;
-                                cbElderGuardian.SelectedIndex = 3;
-                            }
-                            else if (asOpt[j].Contains("Map is occupied by The Purifier"))
-                            {
-                                asOpt[j] = "Map is occupied by 4 (implicit)";
-                                is_elder_map = true;
-                                cbElderGuardian.SelectedIndex = 4;
-                            }
-                            else if (asOpt[j].Contains("Area is influenced by The Elder"))
-                            {
-                                is_elder_map = true;
-                                asOpt[j] = "Area is influenced by 2 (implicit)";
-                                cbMapInfluence.SelectedIndex = 2;
-                            }
-                            else if (asOpt[j].Contains("Area is influenced by The Shaper"))
-                            {
-                                asOpt[j] = "Area is influenced by 1 (implicit)";
-                                cbMapInfluence.SelectedIndex = 1;
-                            }
-
-
-
-                            
 
                             if (lItemOption.ContainsKey(asTmp[0]))
                             {
@@ -340,8 +307,7 @@ namespace PoeTradeSearch
                             }
                             else
                             {
-                                if (itemRarity == Restr.Rare)
-                                    poePriceTab.IsEnabled = true;
+                                
                                 if (itemRarity == Restr.Gem && (Restr.Vaal + " " + itemType) == asTmp[0])
                                     lItemOption[Restr.Vaal] = "_TRUE_";
                                 else if (!is_prophecy && asTmp[0].IndexOf(Restr.ChkProphecy) == 0)
@@ -360,6 +326,7 @@ namespace PoeTradeSearch
                                 else if (lItemOption[Restr.ItemLv] != "" && k < 10)
                                 {
                                     double min = 99999, max = 99999;
+                                    int option = 99999;
                                     bool resistance = false;
                                     bool crafted = asOpt[j].IndexOf("(crafted)") > -1;
 
@@ -398,12 +365,12 @@ namespace PoeTradeSearch
                                                         continue;
                                                     }
                                                 }
-                                                
+
                                                 int idxMin = 0, idxMax = 0;
                                                 bool isMin = false, isMax = false;
                                                 bool isBreak = true;
 
-                                                
+
                                                 MatchCollection matches2 = Regex.Matches(entrie.Text, @"[-]?[0-9]+\.[0-9]+|[-]?[0-9]+|#");
 
                                                 for (int t = 0; t < matches2.Count; t++)
@@ -430,23 +397,63 @@ namespace PoeTradeSearch
 
                                                 if (isBreak)
                                                 {
-                                                    ((ComboBox)this.FindName("cbOpt" + k)).Items.Add(new FilterEntrie(entrie.ID, filterResult.Label));
 
+                                                    ((ComboBox)this.FindName("cbOpt" + k)).Items.Add(new FilterEntrie(entrie.ID, filterResult.Label));
                                                     if (filter == null)
                                                     {
+
                                                         string[] id_split = entrie.ID.Split('.');
                                                         resistance = id_split.Length == 2 && Restr.lResistance.ContainsKey(id_split[1]);
 
                                                         filter = entrie;
-
                                                         MatchCollection matches = Regex.Matches(asOpt[j], @"[-]?[0-9]+\.[0-9]+|[-]?[0-9]+");
                                                         min = isMin && matches.Count > idxMin ? StrToDouble(((Match)matches[idxMin]).Value, 99999) : 99999;
-                                                        
                                                         max = isMax && idxMin < idxMax && matches.Count > idxMax ? StrToDouble(((Match)matches[idxMax]).Value, 99999) : 99999;
                                                     }
 
                                                     break;
                                                 }
+                                            }
+                                        } else
+                                        {
+                                            FilterResultEntrie entrie = null;
+                                            if (asOpt[j].Contains("Allocates "))
+                                                entrie = Array.Find(filterResult.Entries, x => x.Text.Contains("Allocates #"));
+                                            else if (asOpt[j].Contains("occupied by"))
+                                            {
+                                                entrie = Array.Find(filterResult.Entries, x => x.Text.Contains("Map is occupied by #"));
+                                                cbMapInfluence.SelectedIndex = 2;
+                                                min = 99999;
+                                                max = 99999;
+                                                is_elder_map = true;
+                                            }
+                                            else if (asOpt[j].Contains("influenced by"))
+                                            {
+                                                entrie = Array.Find(filterResult.Entries, x => x.Text.Contains("Area is influenced by #"));
+                                                min = 99999;
+                                                max = 99999;
+                                                is_elder_map = true;
+                                                cbMapInfluence.SelectedIndex = 1;
+                                            }
+                                            else if (asOpt[j].Contains("Affects Passives in "))
+                                                entrie = Array.Find(filterResult.Entries, x => x.Text.Contains("Affects Passives in #"));
+
+                                            if (entrie != null && entrie.Option != null)
+                                            {
+                                                ((ComboBox)this.FindName("cbOpt" + k)).Items.Add(new FilterEntrie(entrie.ID, filterResult.Label));
+                                                filter = entrie;
+                                                foreach (FilterResultOptions fro in entrie.Option.Options)
+                                                {
+                                                    if (asOpt[j].Contains(fro.Text))
+                                                    {
+                                                        Console.WriteLine(fro.ID);
+                                                        option = fro.ID;
+                                                        break;
+                                                    }
+                                                }
+                                                if (is_elder_map)
+                                                    cbElderGuardian.SelectedIndex = option;
+                                                
                                             }
                                         }
                                     }
@@ -524,7 +531,7 @@ namespace PoeTradeSearch
 
                                         if (min != 99999 && max != 99999)
                                         {
-                                            if (filter.Text.IndexOf("#~#") > -1)
+                                            if (filter.Text.Contains("# to #"))
                                             {
                                                 min += max;
                                                 min = Math.Truncate(min / 2 * 10) / 10;
@@ -542,17 +549,7 @@ namespace PoeTradeSearch
                                             }
                                         }
 
-                                        if (is_elder_map)
-                                        {
-                                            if (filter.ID == "implicit.stat_1792283443" || filter.ID == "implicit.stat_3624393862")
-                                            {
-                                                min = 99999;
-                                                max = 99999;
-                                            }
-                                        }
-
-                                        
-                                        if (filter.Text.Contains(Restr.FlatPhysicalDamage) ||
+                                        /*if (filter.Text.Contains(Restr.FlatPhysicalDamage) ||
                                                 filter.Text.Contains(Restr.FlatColdDamage) ||
                                                 filter.Text.Contains(Restr.FlatLightningDamage) ||
                                                 filter.Text.Contains(Restr.FlatFireDamage) ||
@@ -560,7 +557,9 @@ namespace PoeTradeSearch
                                         {
                                             min = (min + max) / 2;
                                             max = 99999;
-                                        }
+                                        }*/
+
+                                        ((Label)this.FindName("lbOpt" + k)).Content = min == 99999 ? "" : min.ToString();
 
                                         if (filter.Type != Restr.Enchant && filter.Type != Restr.Implicit)
                                         {
@@ -584,13 +583,18 @@ namespace PoeTradeSearch
                                             }
                                         }
 
+                                        if (option != 99999 && !is_elder_map)
+                                            min = option;
+
                                         ((TextBox)this.FindName("tbOpt" + k + "_0")).Text = min == 99999 ? "" : min.ToString();
                                         ((TextBox)this.FindName("tbOpt" + k + "_1")).Text = max == 99999 ? "" : max.ToString();
+                                        
 
                                         Itemfilter itemfilter = new Itemfilter
                                         {
                                             id = filter.Type,
                                             text = filter.Text,
+                                            option = option,
                                             max = max,
                                             min = min,
                                             disabled = true
@@ -648,6 +652,10 @@ namespace PoeTradeSearch
                     if (is_map || is_currency) is_map_fragment = false;
                     bool is_detail = is_gem || is_currency || is_divinationCard || is_prophecy || is_map_fragment;
 
+
+                    if (itemRarity == Restr.Rare && !is_map)
+                        poePriceTab.IsEnabled = true;
+
                     if (is_elder_map)
                     {
                         ckSocket.Visibility = Visibility.Hidden;
@@ -697,7 +705,7 @@ namespace PoeTradeSearch
 
                         if (!is_unIdentify && itemRarity == Restr.Magic)
                         {
-                            itemType = itemType.Split('-')[0].Trim();
+                            itemType = itemType.Split(new string[] { " of " }, StringSplitOptions.None)[0].Trim();
                         }
 
                         if ((is_unIdentify || itemRarity == Restr.Normal) && itemType.Length > 4 && itemType.IndexOf(Restr.Higher + " ") == 0)
@@ -711,15 +719,16 @@ namespace PoeTradeSearch
                                 itemType = itemType.Substring(9);
                             }
 
-                            if (itemType.Substring(0, 4) == Restr.Shaped + " ")
+                            if (itemType.Substring(0, 7) == Restr.Shaped + " ")
                                 itemType = itemType.Substring(7);
                         }
                         else if (lItemOption[Restr.Synthesis] == "_TRUE_")
                         {
-                            if (itemType.Substring(0, 4) == Restr.Synthesised + " ")
+                            if (itemType.Substring(0, 12) == Restr.Synthesised + " ")
                                 itemType = itemType.Substring(12);
                         }
-                        if (!is_unIdentify && itemRarity == Restr.Magic)
+
+                        /*if (!is_unIdentify && itemRarity == Restr.Magic)
                         {
                             string[] tmp = itemType.Split(' ');
                             if (tmp.Length > 1)
@@ -739,8 +748,8 @@ namespace PoeTradeSearch
                                 }
                                 
                             }
-                        }
-                        /*if (!is_unIdentify && itemRarity == Restr.Magic)
+                        }*/
+                        if (!is_unIdentify && itemRarity == Restr.Magic)
                         {
                             string[] tmp = itemType.Split(' ');
                             if (tmp.Length > 1)
@@ -749,7 +758,7 @@ namespace PoeTradeSearch
                                 {
                                     tmp[i] = "";
                                     string tmp2 = string.Join(" ", tmp).Trim();
-                                    BaseResultData tmpBaseType = mBaseDatas.Find(x => x.NameEn.Contains(tmp2));
+                                    BaseResultData tmpBaseType = mBaseDatas.Find(x => x.NameEn == tmp2);
                                     if (tmpBaseType != null)
                                     {
                                         itemType = tmpBaseType.NameEn;
@@ -759,7 +768,7 @@ namespace PoeTradeSearch
                                     }
                                 }
                             }
-                        }*/
+                        }
                     }
 
                     if (itemInherits == "")
@@ -1147,6 +1156,16 @@ namespace PoeTradeSearch
                     itemfilter.min = minValue;
                     itemfilter.max = maxValue;
                     
+                    if (itemfilter.text.Contains(Restr.Allocates))
+                    {
+                        itemfilter.option = (int)minValue;
+                        itemfilter.min = 99999;
+                    }
+
+                    if (itemOption.ElderGuardian > 0 && itemfilter.text.Contains("occupied by"))
+                        itemfilter.option = itemOption.ElderGuardian;
+                    if (itemOption.MapInfluence > 0 && itemfilter.text.Contains("influenced by"))
+                        itemfilter.option = itemOption.MapInfluence;
 
                     /*if (mItemBaseName.Inherits.Contains("Weapons"))
                     {
@@ -1292,7 +1311,6 @@ namespace PoeTradeSearch
                             string input = itemOptions.itemfilters[i].text;
                             string id = itemOptions.itemfilters[i].id;
                             string type = itemOptions.itemfilters[i].id.Split('.')[0];
-
                             if (input.Trim() != "")
                             {
                                 string type_name = Restr.lFilterTypeName[type];
@@ -1322,18 +1340,17 @@ namespace PoeTradeSearch
 
                                 JQ.Stats[0].Filters[idx] = new q_Stats_filters();
                                 JQ.Stats[0].Filters[idx].Value = new q_Min_And_Max();
-                                JQ.Stats[0].Filters[idx].Value.option = null;
+                                JQ.Stats[0].Filters[idx].Value.option = 99999;
                                 
                                 if (filter != null && filter.ID != null && filter.ID.Trim() != "")
                                 {
                                     JQ.Stats[0].Filters[idx].Disabled = itemOptions.itemfilters[i].disabled == true;
                                     
-                                    if (filter.ID == "implicit.stat_1792283443")
+                                    if (itemOptions.itemfilters[i].option != 0)
                                     {
-                                        JQ.Stats[0].Filters[idx].Value.option = Convert.ToString(itemOptions.MapInfluence);
-                                    } else if (filter.ID == "implicit.stat_3624393862")
-                                    {
-                                        JQ.Stats[0].Filters[idx].Value.option = Convert.ToString(itemOptions.ElderGuardian);
+                                        JQ.Stats[0].Filters[idx].Value.option = itemOptions.itemfilters[i].option;
+                                        JQ.Stats[0].Filters[idx].Value.Min = 99999;
+                                        JQ.Stats[0].Filters[idx].Value.Max = 99999;
                                     }
                                     else
                                     {
@@ -1451,6 +1468,7 @@ namespace PoeTradeSearch
                     sEntity = sEntity.Replace("{\"max\":99999,\"min\":99999}", "{}");
                     sEntity = sEntity.Replace("{\"max\":99999,", "{");
                     sEntity = sEntity.Replace(",\"min\":99999}", "}");
+                    sEntity = sEntity.Replace("\"min\":99999,", "");
 
                     sEntity = sEntity.Replace(",{\"disabled\":true,\"id\":\"temp_ids\",\"value\":{}}", "");
                     sEntity = sEntity.Replace("[{\"disabled\":true,\"id\":\"temp_ids\",\"value\":{}}", "[");
@@ -1458,9 +1476,11 @@ namespace PoeTradeSearch
 
                     sEntity = Regex.Replace(sEntity, "\"(sale_type|rarity|category|corrupted|synthesised_item|shaper_item|elder_item|crusader_item|redeemer_item|hunter_item|warlord_item|map_shaped|map_elder|map_blighted)\":{\"option\":\"any\"},?", "");
                     sEntity = sEntity.Replace("},}", "}}");
-                    sEntity = sEntity.Replace(",\"option\":null", "");
+                    sEntity = sEntity.Replace(",\"option\":99999", "");
+                    
                     sEntity = sEntity.Replace("99999", "null");
-
+                    sEntity = sEntity.Replace("\"value\":{\"option\":null", "\"value\":{");
+                    //sEntity = sEntity.Replace("\"option\":null", "");
                     //sEntity = sEntity.Replace("\"implicit.stat_1792283443\",\"value\":{\"max\":0,\"min\":0}", "\"implicit.stat_1792283443\",\"value\":{\"option\":\"2\"}");
                     //sEntity = sEntity.Replace("\"implicit.stat_3624393862\",\"value\":{\"max\":0,\"min\":0}", "\"implicit.stat_3624393862\",\"value\":{\"option\":\"4\"}");
 
@@ -1661,7 +1681,7 @@ namespace PoeTradeSearch
                                                                 ratioString = " [" + String.Format("{0:0.00}", ratio) + " " + buyerCurrency + " per] ";
                                                             }
                                                         }
-                                                        text = "[Stock:" + sellerStock + "], " + sellerAmount + " " + sellerCurrency + " <-> " + buyerAmount + " " + buyerCurrency + ratioString + " [" + account + "]";
+                                                        text = "[Stock:" + sellerStock + "], " + sellerAmount + " " + sellerCurrency + " <= " + buyerAmount + " " + buyerCurrency + ratioString + " [" + account + "]";
                                                         liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1)});
 
                                                     }

@@ -81,6 +81,8 @@ namespace PoeTradeSearch
         internal const string Delve = "Delve";
         internal const string Local = "Local";
 
+        internal const string Allocates = "Allocates";
+
         internal const string PhysicalDamage = "Physical Damage";
         internal const string ElementalDamage = "Elemental Damage";
         internal const string ChaosDamage = "Chaos Damage";
