@@ -383,12 +383,10 @@ namespace PoeTradeSearch
                 exchange = new string[2];
                 exchange[0] = Restr.lExchangeCurrency[mItemBaseName.TypeEN];
                 exchange[1] = Restr.lExchangeCurrency[(string)(cbOrbs.SelectedIndex > 0 ? cbOrbs.SelectedValue : cbSplinters.SelectedValue)];
-                lbBuyPay.Content = "Buy <= Pay";
             }
             lbPriceMinStock.Visibility = Visibility.Visible;
             tbPriceMinStock.Visibility = Visibility.Visible;
             tbPriceMinStock.IsEnabled = true;
-
             
             PriceUpdateThreadWorker(exchange != null ? null : GetItemOptions(), exchange, (string)cbAccountState.SelectedValue, int.Parse(tbPriceMinStock.Text));
         }
@@ -508,6 +506,9 @@ namespace PoeTradeSearch
                 string itemBaseType = mItemBaseName.TypeEN.Replace(" ", "-").Replace("'", "").ToLower();
                 string itemInherit = mItemBaseName.Inherits[0].ToLower();
                 bool useBase = false, useName = false;
+                Console.WriteLine("mItemBaseName.NameEN:" + mItemBaseName.NameEN);
+                Console.WriteLine("mItemBaseName.TypeEN:" + mItemBaseName.TypeEN);
+                Console.WriteLine("inherits: " + mItemBaseName.Inherits[0].ToLower());
                 switch (itemInherit)
                 {
                     case "currency":

@@ -15,7 +15,6 @@ namespace PoeTradeSearch
             public double max;
             public double min;
             public bool disabled;
-            public int option;
             public bool isNull = false;
         }
 
@@ -295,26 +294,6 @@ namespace PoeTradeSearch
 
             [DataMember(Name = "part")]
             internal string Part = "";
-
-            [DataMember(Name = "option")]
-            internal FilterResultOption Option = new FilterResultOption();
-        }
-
-        [DataContract]
-        internal class FilterResultOption
-        {
-            [DataMember(Name = "options")]
-            internal FilterResultOptions[] Options = null;
-        }
-
-        [DataContract]
-        internal class FilterResultOptions
-        {
-            [DataMember(Name = "id")]
-            internal int ID = 0;
-
-            [DataMember(Name = "text")]
-            internal string Text = "";
         }
 
         [DataContract]
@@ -436,7 +415,7 @@ namespace PoeTradeSearch
             internal double Max;
 
             [DataMember(Name = "option")]
-            internal int option;
+            internal string option;
         }
 
         [DataContract]
