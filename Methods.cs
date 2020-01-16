@@ -647,7 +647,10 @@ namespace PoeTradeSearch
                     bool is_divinationCard = itemRarity == Restr.DivinationCard;
 
                     //if no option is selected in config, use item corruption status. Otherwise, use the config value
-                    cbCorrupt.SelectedIndex = (int)cbCorrupt.SelectedIndex == 0 ? (is_corrupted ? 1 : 2) : cbCorrupt.SelectedIndex;
+                    if (!is_divinationCard)
+                        cbCorrupt.SelectedIndex = (int)cbCorrupt.SelectedIndex == 0 ? (is_corrupted ? 1 : 2) : cbCorrupt.SelectedIndex;
+                    else
+                        cbCorrupt.SelectedIndex = 0;
 
                     if (is_map || is_currency) is_map_fragment = false;
                     bool is_detail = is_gem || is_currency || is_divinationCard || is_prophecy || is_map_fragment;
@@ -1006,7 +1009,7 @@ namespace PoeTradeSearch
 
                     //cbName.IsChecked = (itemRarity != Restr.Rare && itemRarity != Restr.Magic) || !(by_type && mConfigData.Options.SearchByType);
 
-                    if (itemRarity != Restr.Unique && itemRarity != Restr.Normal)
+                    if (itemRarity != Restr.Unique && itemRarity != Restr.Normal && !is_currency)
                         cbName.IsChecked = mConfigData.Options.SearchByType;
                     else
                         cbName.IsChecked = true;
@@ -1561,7 +1564,6 @@ namespace PoeTradeSearch
 
                         int total = 0;
                         int resultCount = resultData.Result.Length;
-
                         if (resultData.Result.Length > 0)
                         {
                             string ents0 = "", ents1 = "";
@@ -1608,8 +1610,10 @@ namespace PoeTradeSearch
                                     fetchData.Result = new FetchDataInfo[5];
 
                                     fetchData = Json.Deserialize<FetchData>(jsonResult);
+                                    
                                     for (int i = 0; i < fetchData.Result.Length; i++)
                                     {
+                                        
                                         if (fetchData.Result[i] == null)
                                             break;
 
@@ -1682,14 +1686,44 @@ namespace PoeTradeSearch
                                                             }
                                                         }
                                                         text = "[Stock:" + sellerStock + "], " + sellerAmount + " " + sellerCurrency + " <= " + buyerAmount + " " + buyerCurrency + ratioString + " [" + account + "]";
-                                                        liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1)});
-
+                                                        if (cbSameUser.IsChecked == true)
+                                                        {
+                                                            if (liPrice.Items.Count > 1)
+                                                            {
+                                                                ListBoxItem lbi = (ListBoxItem)liPrice.Items[liPrice.Items.Count - 1];
+                                                                if (!lbi.Content.ToString().Contains("[" + account + "]"))
+                                                                    liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1) });
+                                                            }
+                                                            else
+                                                            {
+                                                                liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1) });
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1) });
+                                                        }
                                                     }
                                                     else
                                                     {
-
+                                                        
                                                         text = amount + " " + keyName + " [" + account + "]" + " [" + onlineStatus + "]";
-                                                        liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1)});
+                                                        if (cbSameUser.IsChecked == true)
+                                                        {
+                                                            if (liPrice.Items.Count > 1)
+                                                            {
+                                                                ListBoxItem lbi = (ListBoxItem)liPrice.Items[liPrice.Items.Count - 1];
+                                                                if (!lbi.Content.ToString().Contains("[" + account + "]"))
+                                                                    liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1) });
+                                                            }
+                                                            else
+                                                            {
+                                                                liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1) });
+                                                            }
+                                                        } else
+                                                        {
+                                                            liPrice.Items.Add(new ListBoxItem { Content = text, Foreground = onlineStatus == "Online" ? System.Windows.Media.Brushes.Green : System.Windows.Media.Brushes.Red, BorderThickness = new Thickness(1) });
+                                                        }
                                                     }
                                                 }
                                             );

@@ -262,7 +262,7 @@
                         <ComboBoxItem Content="Shaper"/>
                         <ComboBoxItem Content="Elder"/>
                     </ComboBox>
-                    
+
                     <Label x:Name="lbOpt0" Content="" HorizontalAlignment="Left" Margin="414,6,0,0" VerticalAlignment="Top" />
                     <Label x:Name="lbOpt1" Content="" HorizontalAlignment="Left" Margin="414,31,0,0" VerticalAlignment="Top" />
                     <Label x:Name="lbOpt2" Content="" HorizontalAlignment="Left" Margin="414,56,0,0" VerticalAlignment="Top" />
@@ -301,6 +301,8 @@
                     <TextBlock x:Name="tkPriceCount2" Text="0" HorizontalAlignment="Left" Margin="4,325,0,0" VerticalAlignment="Top" />
                     <TextBlock x:Name="tkPriceInfo2" TextAlignment="Right" Margin="5,325,5,0" Text="TextBlock" MouseEnter="TkPrice_Mouse_EnterOrLeave" MouseLeave="TkPrice_Mouse_EnterOrLeave" Cursor="Hand" MouseLeftButtonDown="TkPrice_MouseLeftButtonDown" MouseRightButtonDown="tkPriceInfo_MouseRightButtonDown" />
                     <Label x:Name="lbPriceMinStock" Content="Minimum Stock:" HorizontalAlignment="Left" Margin="1,288,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="lbMultipleListings" Content="Hide same user listings:" HorizontalAlignment="Left" Margin="136,288,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.561,0.462" Width="138" Height="26"/>
+                    <CheckBox x:Name="cbSameUser" Content="" Margin="273,295,191,39"/>
                     <TextBox x:Name="tbPriceMinStock" HorizontalAlignment="Left" Height="22" Margin="99,290,0,0" Text="" VerticalAlignment="Top" Width="33" BorderThickness="0,0,0,1" PreviewMouseLeftButtonDown="TbOpt0_0_PreviewMouseLeftButtonDown"/>
                 </Grid>
             </TabItem>

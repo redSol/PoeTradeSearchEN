@@ -20,7 +20,8 @@
     "ctrl_wheel": true,
     "check_updates": true,
     "data_version": "3.9.2",
-    "always_on_top": true
+    "always_on_top": true,
+    "disable_startup_message": true
   },
   "shortcuts": [
     {

@@ -167,7 +167,8 @@ namespace PoeTradeSearch
             }
             else
             {
-                MessageBox.Show(Application.Current.MainWindow, tmp + '\n' + "Press the top of the program (?) for more information.", "POE Exchange Search - created by phiDelPark");
+                if (!mConfigData.Options.DisableStartupMessage)
+                    MessageBox.Show(Application.Current.MainWindow, tmp + '\n' + "Press the top of the program (?) for more information.", "POETradeSearch - created by phiDelPark");
             }
 
             if (!mDisableClip)

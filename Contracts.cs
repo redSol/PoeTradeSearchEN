@@ -163,6 +163,9 @@ namespace PoeTradeSearch
 
             [DataMember(Name = "always_on_top")]
             internal bool AlwaysOnTop = true;
+
+            [DataMember(Name = "disable_startup_message")]
+            internal bool DisableStartupMessage = false;
         }
 
         [DataContract(Name = "shortcuts")]
