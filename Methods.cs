@@ -25,6 +25,7 @@ namespace PoeTradeSearch
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             path = path.Remove(path.Length - 4) + "Data\\";
 #endif
+            mConfigData = null;
             FileStream fs = null;
             try
             {
@@ -182,6 +183,7 @@ namespace PoeTradeSearch
             
             ckLv.Content = "iLevel";
             Synthesis.Content = "Synthesis";
+            Synthesis.IsChecked = false;
             lbSocketBackground.Visibility = Visibility.Hidden;
 
             ckSocket.Visibility = Visibility.Visible;
@@ -2000,121 +2002,143 @@ namespace PoeTradeSearch
 
                         try
                         {
-                            if (valueLower == "{pause}")
+                            if (!shortcut.Custom)
                             {
-                                mIsPause = !mIsPause;
-
-                                if (mIsPause)
+                                if (valueLower == "{pause}")
                                 {
-                                    if (mConfigData.Options.CtrlWheel)
-                                        MouseHook.Stop();
+                                    mIsPause = !mIsPause;
 
-                                    MessageBox.Show(Application.Current.MainWindow, "Hotkeys have been paused." + '\n' +
-                                        "다시 시작하려면 일시 중지 단축키를 한번더 누르세요.", "POE 거래소 검색");
-                                }
-                                else
-                                {
-                                    if (mConfigData.Options.CtrlWheel)
-                                        MouseHook.Start();
-
-                                    MessageBox.Show(Application.Current.MainWindow, "Hotkeys have been re-enabled.", "POE 거래소 검색");
-                                }
-
-                                Native.SetForegroundWindow(findHwnd);
-                            }
-                            else if (valueLower == "{close}")
-                            {
-                                IntPtr pHwnd = Native.FindWindow(null, popWinTitle);
-
-                                if (this.Visibility == Visibility.Hidden && pHwnd.ToInt32() == 0)
-                                {
-                                    Native.SendMessage(findHwnd, 0x0101, new IntPtr(shortcut.Keycode), IntPtr.Zero);
-                                }
-                                else
-                                {
-                                    if (pHwnd.ToInt32() != 0)
-                                        Native.SendMessage(pHwnd, /* WM_CLOSE = */ 0x10, IntPtr.Zero, IntPtr.Zero);
-
-                                    if (this.Visibility == Visibility.Visible)
-                                        Close();
-                                }
-                            }
-                            else if (!mIsPause)
-                            {
-                                if (valueLower == "{run}" || valueLower == "{wiki}")
-                                {
-                                    mClipboardBlock = true;
-
-                                    System.Windows.Forms.SendKeys.SendWait("^{c}");
-                                    Thread.Sleep(300);
-
-                                    try
+                                    if (mIsPause)
                                     {
-                                        if (Clipboard.ContainsText(TextDataFormat.UnicodeText) || Clipboard.ContainsText(TextDataFormat.Text))
-                                        {
-                                            ItemTextParser(GetClipText(Clipboard.ContainsText(TextDataFormat.UnicodeText)), valueLower != "{wiki}");
+                                        if (mConfigData.Options.CtrlWheel)
+                                            MouseHook.Stop();
 
-                                            if (valueLower == "{wiki}")
-                                                Button_Click_4(null, new RoutedEventArgs());
-                                        }
+                                        MessageBox.Show(Application.Current.MainWindow, "Hotkeys have been paused." + '\n' +
+                                            "다시 시작하려면 일시 중지 단축키를 한번더 누르세요.", "POE 거래소 검색");
                                     }
-                                    catch (Exception ex)
+                                    else
                                     {
-                                        Console.WriteLine(ex.Message);
+                                        if (mConfigData.Options.CtrlWheel)
+                                            MouseHook.Start();
+
+                                        MessageBox.Show(Application.Current.MainWindow, "Hotkeys have been re-enabled.", "POE 거래소 검색");
                                     }
 
-                                    mClipboardBlock = false;
+                                    Native.SetForegroundWindow(findHwnd);
                                 }
-                                else if (valueLower.IndexOf("{enter}") == 0)
-                                {
-                                    //Regex regex = new Regex(@"{enter}", RegexOptions.IgnoreCase);
-                                    //string tmp = regex.Replace(shortcut.Value, "" + '\n');
-                                    //string[] strs = tmp.Trim().Split('\n');
-                                    System.Windows.Forms.SendKeys.SendWait(valueLower);
-                                    /*for (int i = 0; i < strs.Length; i++)
-                                    {
-                                        SetClipText(strs[i], TextDataFormat.UnicodeText);
-                                        Thread.Sleep(300);
-                                        System.Windows.Forms.SendKeys.SendWait("{enter}");
-                                        System.Windows.Forms.SendKeys.SendWait("^{a}");
-                                        System.Windows.Forms.SendKeys.SendWait("^{v}");
-                                        System.Windows.Forms.SendKeys.SendWait("{enter}");
-                                    }*/
-                                }
-                                else if (valueLower.IndexOf("{invite}") == 0)
-                                {
-                                    System.Windows.Forms.SendKeys.SendWait("^{ENTER}");
-                                    System.Windows.Forms.SendKeys.SendWait("{HOME}");
-                                    System.Windows.Forms.SendKeys.SendWait("{DELETE}");
-                                    System.Windows.Forms.SendKeys.SendWait("/invite ");
-                                    System.Windows.Forms.SendKeys.SendWait("{ENTER}");
-                                }
-                                else if (valueLower.IndexOf("{link}") == 0)
-                                {
-                                    Regex regex = new Regex(@"{link}", RegexOptions.IgnoreCase);
-                                    string tmp = regex.Replace(shortcut.Value, "" + '\n');
-                                    string[] strs = tmp.Trim().Split('\n');
-                                    if (strs.Length > 0) Process.Start(strs[0]);
-                                }
-                                else if (valueLower.IndexOf(".jpg") > 0)
+                                else if (valueLower == "{close}")
                                 {
                                     IntPtr pHwnd = Native.FindWindow(null, popWinTitle);
-                                    if (pHwnd.ToInt32() != 0)
-                                        Native.SendMessage(pHwnd, /* WM_CLOSE = */ 0x10, IntPtr.Zero, IntPtr.Zero);
 
-                                    PopWindow popWindow = new PopWindow(shortcut.Value);
-
-                                    if ((shortcut.Position ?? "") != "")
+                                    if (this.Visibility == Visibility.Hidden && pHwnd.ToInt32() == 0)
                                     {
-                                        string[] strs = shortcut.Position.ToLower().Split('x');
-                                        popWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-                                        popWindow.Left = double.Parse(strs[0]);
-                                        popWindow.Top = double.Parse(strs[1]);
+                                        Native.SendMessage(findHwnd, 0x0101, new IntPtr(shortcut.Keycode), IntPtr.Zero);
                                     }
+                                    else
+                                    {
+                                        if (pHwnd.ToInt32() != 0)
+                                            Native.SendMessage(pHwnd, /* WM_CLOSE = */ 0x10, IntPtr.Zero, IntPtr.Zero);
 
-                                    popWindow.Title = popWinTitle;
-                                    popWindow.Show();
+                                        if (this.Visibility == Visibility.Visible)
+                                            Close();
+                                    }
                                 }
+                                else if (!mIsPause)
+                                {
+                                    if (valueLower == "{run}" || valueLower == "{wiki}")
+                                    {
+                                        mClipboardBlock = true;
+
+                                        System.Windows.Forms.SendKeys.SendWait("^{c}");
+                                        Thread.Sleep(300);
+
+                                        try
+                                        {
+                                            if (Clipboard.ContainsText(TextDataFormat.UnicodeText) || Clipboard.ContainsText(TextDataFormat.Text))
+                                            {
+                                                ItemTextParser(GetClipText(Clipboard.ContainsText(TextDataFormat.UnicodeText)), valueLower != "{wiki}");
+
+                                                if (valueLower == "{wiki}")
+                                                    Button_Click_4(null, new RoutedEventArgs());
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Console.WriteLine(ex.Message);
+                                        }
+
+                                        mClipboardBlock = false;
+                                    }
+                                    else if (valueLower.IndexOf("{enter}") == 0)
+                                    {
+                                        //Regex regex = new Regex(@"{enter}", RegexOptions.IgnoreCase);
+                                        //string tmp = regex.Replace(shortcut.Value, "" + '\n');
+                                        //string[] strs = tmp.Trim().Split('\n');
+                                        System.Windows.Forms.SendKeys.SendWait(valueLower);
+                                        /*for (int i = 0; i < strs.Length; i++)
+                                        {
+                                            SetClipText(strs[i], TextDataFormat.UnicodeText);
+                                            Thread.Sleep(300);
+                                            System.Windows.Forms.SendKeys.SendWait("{enter}");
+                                            System.Windows.Forms.SendKeys.SendWait("^{a}");
+                                            System.Windows.Forms.SendKeys.SendWait("^{v}");
+                                            System.Windows.Forms.SendKeys.SendWait("{enter}");
+                                        }*/
+                                    }
+                                    else if (valueLower.IndexOf("{invite}") == 0)
+                                    {
+                                        System.Windows.Forms.SendKeys.SendWait("^{ENTER}");
+                                        System.Windows.Forms.SendKeys.SendWait("{HOME}");
+                                        System.Windows.Forms.SendKeys.SendWait("{DELETE}");
+                                        System.Windows.Forms.SendKeys.SendWait("/invite ");
+                                        System.Windows.Forms.SendKeys.SendWait("{ENTER}");
+                                    }
+                                    else if (valueLower.IndexOf("{reload}") == 0)
+                                    {
+                                        if (!Setting())
+                                        {
+                                            ForegroundMessage("Failed to reload settings", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        } else
+                                        {
+                                            ForegroundMessage("Reloaded settings", "Reload", MessageBoxButton.OK, MessageBoxImage.Information);
+                                        }
+                                    }
+                                    else if (valueLower.IndexOf("{custom}") == 0)
+                                    {
+                                        System.Windows.Forms.SendKeys.SendWait("x");
+                                        Thread.Sleep(300);
+                                        System.Windows.Forms.SendKeys.SendWait("+(QW)");
+                                    }
+                                    else if (valueLower.IndexOf("{link}") == 0)
+                                    {
+                                        Regex regex = new Regex(@"{link}", RegexOptions.IgnoreCase);
+                                        string tmp = regex.Replace(shortcut.Value, "" + '\n');
+                                        string[] strs = tmp.Trim().Split('\n');
+                                        if (strs.Length > 0) Process.Start(strs[0]);
+                                    }
+                                    else if (valueLower.IndexOf(".jpg") > 0)
+                                    {
+                                        IntPtr pHwnd = Native.FindWindow(null, popWinTitle);
+                                        if (pHwnd.ToInt32() != 0)
+                                            Native.SendMessage(pHwnd, /* WM_CLOSE = */ 0x10, IntPtr.Zero, IntPtr.Zero);
+
+                                        PopWindow popWindow = new PopWindow(shortcut.Value);
+
+                                        if ((shortcut.Position ?? "") != "")
+                                        {
+                                            string[] strs = shortcut.Position.ToLower().Split('x');
+                                            popWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+                                            popWindow.Left = double.Parse(strs[0]);
+                                            popWindow.Top = double.Parse(strs[1]);
+                                        }
+
+                                        popWindow.Title = popWinTitle;
+                                        popWindow.Show();
+                                    }
+                                } 
+                                
+                            } else {
+                                System.Windows.Forms.SendKeys.SendWait(valueLower);
                             }
                         }
                         catch (Exception)

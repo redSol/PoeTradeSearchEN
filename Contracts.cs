@@ -171,6 +171,9 @@ namespace PoeTradeSearch
         [DataContract(Name = "shortcuts")]
         internal class ConfigShortcut
         {
+            [DataMember(Name = "custom")]
+            internal bool Custom = false;
+
             [DataMember(Name = "keycode")]
             internal int Keycode = 0;
 
